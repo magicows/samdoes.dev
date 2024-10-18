@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.writing-vertical {
+  writing-mode: vertical-lr;
+}
+
+.notion-callout{
+  @apply flex flex-row items-center bg-burnDark
+}
+
+.notion-callout .icon{
+  @apply mr-2
+}
+
+.notion-image legend{
+  @apply text-zinc-400 italic
+}
+
+html {
+  scroll-behavior: smooth;
+}
