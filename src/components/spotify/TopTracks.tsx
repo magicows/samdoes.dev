@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PiHeadphonesFill } from "react-icons/pi";
 import { SiSpotify } from "react-icons/si";
+import useMediaQuery from "../util/Hooks";
 
 interface TrackData {
   artists: string[];
@@ -22,6 +23,7 @@ const TopTracks = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showMore, setShowMore] = useState(false);
+  const isMediumScreen = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
     const fetchCurrentlyPlaying = async () => {
@@ -43,6 +45,8 @@ const TopTracks = () => {
       }
     };
 
+    console.log(showMore && !isMediumScreen);
+
     fetchCurrentlyPlaying();
   }, []);
 
@@ -59,23 +63,85 @@ const TopTracks = () => {
     const [showInfo, setShowInfo] = useState(true);
 
     return (
-      <div className="flex flex-col items-center justify-center gap-8">
-        <div className="flex flex-1 flex-col mb-6 w-full">
-          <h4 className="flex items-center mb-6">
+      <div className="flex flex-col md:flex-row items-stretch justify-center gap-8">
+        {((showMore && !isMediumScreen) || isMediumScreen) && (
+          <div className="md:w-1/4 flex flex-col justify-between order-2 md:order-1">
+            <h4 className="hidden md:flex items-center mb-6">
+              <PiHeadphonesFill className="text-burn text-2xl" />
+              <span className="font-bold ml-2 flex flex-row items-center">
+                Top 10 on <SiSpotify className="ml-2" />
+              </span>
+            </h4>
+
+            <div
+              className={`min-w-[full] max-w-[300px] w-full min-h-[full] mx-auto relative mb-[6px] flex justify-center`}
+            >
+              {/* Largest circle (Black) */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[calc(90%+2px)] aspect-square bg-black rounded-full"></div>
+
+              {currentlyPlaying && (
+                <img
+                  src={currentlyPlaying.albumArt}
+                  alt="Track Album art"
+                  className="rounded-full w-[90%] animate-rotate cursor-pointer z-[1]"
+                  onClick={() => setShowInfo(!showInfo)}
+                />
+              )}
+
+              {/* Middle circle (White) */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[25%] h-[25%] bg-white rounded-full z-[2]"></div>
+
+              {/* Smallest circle (Center hole) */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[2%] h-[2%] bg-black rounded-full z-[3]"></div>
+
+              {showInfo && (
+                <div
+                  className={`flex flex-col justify-between absolute top-1/2 left-1/2 -translate-x-1/2 w-full min-h-[53%] box-border ${
+                    currentlyPlaying ? "bg-zinc-700" : "bg-burnDark"
+                  } rounded p-2 z-20`}
+                >
+                  <div className="flex flex-row items-center justify-between self-start text-sm font-black w-full">
+                    <span className="font-black text-burnLight">
+                      Listening now:
+                    </span>
+                    <SiSpotify />
+                  </div>
+                  {currentlyPlaying ? (
+                    <div className="flex flex-col">
+                      <p className="text-normal font-semibold line-clamp-1">
+                        {currentlyPlaying.track}
+                      </p>
+                      <p className="text-[14px] font-normal line-clamp-1">
+                        {currentlyPlaying.artists.join(", ")}
+                      </p>
+                      <p className="text-[10px] font-light line-clamp-1">
+                        {currentlyPlaying.album}
+                      </p>
+                    </div>
+                  ) : (
+                    <h4 className="text-base text-white font-black">OFF AIR.</h4>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-1 flex-col w-full order-1 md:order-2">
+          <h4 className="flex md:hidden items-center mb-6">
             <PiHeadphonesFill className="text-burn text-2xl" />
             <span className="font-bold ml-2 flex flex-row items-center">
               Top 10 on <SiSpotify className="ml-2" />
             </span>
           </h4>
-
-          <div className="flex-1 flex flex-col">
+          <div className="grid grid-cols-1 md:grid-cols-2 grid-flow-col-auto gap-x-2 gap-y-2 flex-1">
             {/* Display only 3 items when showMore is false, or all items when true */}
             {top10
-              ?.slice(0, showMore ? top10.length : 3)
+              ?.slice(0, showMore || isMediumScreen ? top10.length : 3)
               .map((track: TrackData, index: number) => (
                 <div
                   key={index}
-                  className="bg-zinc-700 rounded flex flex-row items-center group justify-between pb-2 px-2 pt-2 mb-2 cursor-pointer relative overflow-hidden hover:overflow-visible"
+                  className="bg-zinc-700 rounded flex flex-row items-center group justify-between pb-2 px-2 pt-2 cursor-pointer relative overflow-hidden hover:overflow-visible"
                 >
                   <div className="flex flex-row items-center justify-between gap-2 w-full z-10">
                     <div className="flex flex-row items-center gap-2">
@@ -83,8 +149,10 @@ const TopTracks = () => {
                         {index + 1}.
                       </span>
                       <div className="flex flex-col">
-                        <p className="text-[10px] font-semibold">{track.track}</p>
-                        <p className="text-[9px] font-normal">
+                        <p className="text-[10px] font-semibold line-clamp-1">
+                          {track.track}
+                        </p>
+                        <p className="text-[9px] font-normal line-clamp-1">
                           {track.artists.join(", ")}
                         </p>
                       </div>
@@ -102,64 +170,16 @@ const TopTracks = () => {
                   </div>
                 </div>
               ))}
-
-            {/* "Show more" button */}
-            {!showMore && (
-              <button
-                className="text-burn mt-1 text-[10px] font-semibold underline"
-                onClick={() => setShowMore(true)}
-              >
-                Gimmie the rest...
-              </button>
-            )}
           </div>
-        </div>
 
-        <div
-          className={`min-w-[200px] max-w-full w-full min-h-[200px] relative`}
-        >
-          {/* Largest circle (Black) */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[202px] h-[202px] bg-black rounded-full"></div>
-
-          {currentlyPlaying && (
-            <img
-              src={currentlyPlaying.albumArt}
-              alt="Track Album art"
-              className="rounded-full w-full animate-rotate cursor-pointer z-10"
-              onClick={() => setShowInfo(!showInfo)}
-            />
-          )}
-
-          {/* Middle circle (White) */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[25%] h-[25%] bg-white rounded-full"></div>
-
-          {/* Smallest circle (Center hole) */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[2%] h-[2%] bg-black rounded-full"></div>
-
-          {showInfo && (
-            <div
-              className={`flex flex-col justify-between absolute top-1/2 left-1/2 -translate-x-1/2 w-full h-[53%] box-border ${
-                currentlyPlaying ? "bg-zinc-700" : "bg-burnDark"
-              } rounded p-2 z-20`}
+          {/* "Show more" button */}
+          {!showMore && (
+            <button
+              className="md:hidden text-burn mt-2 text-[10px] font-semibold underline"
+              onClick={() => setShowMore(true)}
             >
-              <div className="flex flex-row items-center justify-between self-start text-sm font-black w-full">
-                 <span className="font-black text-burnLight">Listening now:</span>
-                 <SiSpotify />
-              </div>
-              {currentlyPlaying ? (
-                <div className="flex flex-col">
-                  <p className="text-normal font-semibold">
-                    {currentlyPlaying.track}
-                  </p>              
-                  <p className="text-[14px] font-normal">
-                    {currentlyPlaying.artists.join(", ")}
-                  </p>                  
-                  <p className="text-[10px] font-light">{currentlyPlaying.album}</p>       
-                </div>
-              ) : (
-                <h4 className="text-base text-white font-black">OFF AIR.</h4>
-              )}   
-            </div>
+              Gimmie the rest...
+            </button>
           )}
         </div>
       </div>
@@ -168,13 +188,7 @@ const TopTracks = () => {
 
   return (
     <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <NowPlaying />
-      )}
+      {loading ? <p>Loading...</p> : error ? <p>{error}</p> : <NowPlaying />}
     </div>
   );
 };

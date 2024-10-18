@@ -49,10 +49,10 @@ export const About = () => {
         </div>
         <div>
         <Stats />  
-        <TopTracks />    
+           
         </div>  
       </div>
-      
+      <TopTracks /> 
     </section>
   );
 };
