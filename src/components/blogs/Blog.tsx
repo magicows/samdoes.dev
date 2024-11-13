@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AiFillGithub, AiOutlineExport } from "react-icons/ai";
 import { BlogModal } from "./BlogModal";
 import Reveal from "../util/Reveal";
+import { CalendarIcon } from "./CalendarIcon";
 
 interface Props {
   post: any;
@@ -22,10 +23,11 @@ export const Blog = ({ post }: Props) => {
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
+      console.log(post.properties.Date.date);
     } else {
       controls.start("hidden");
     }
-  }, [isInView, controls]);
+  }, [isInView, controls]);  
 
   const example = {
     title: "Paint.app",
@@ -107,7 +109,7 @@ export const Blog = ({ post }: Props) => {
                   {post.properties.Title.title[0].plain_text}
                 </h4>
                 <div className="w-full h-[1px] bg-zinc-600" />
-
+                <CalendarIcon dateString={post.properties.Date.date.start} />
                 {/* <Link href={example.code} target="_blank" rel="nofollow">
                     <AiFillGithub className="text-xl text-zinc-300 hover:text-burnLight transition-colors" />
                   </Link>
@@ -117,9 +119,11 @@ export const Blog = ({ post }: Props) => {
                   </Link> */}
               </div>
             </Reveal>
-            <Reveal>
-              <div className="flex flex-wrap gap-4 text-sm text-burnLight my-2">
-                {tags.join(" - ")}
+            <Reveal width="w-full">
+              <div className={"flex flex-row justify-between items-center"}>
+                <div className="flex flex-wrap gap-4 text-sm text-burnLight my-2">
+                  {tags.join(" - ")}
+                </div>                
               </div>
             </Reveal>
             <Reveal>

@@ -9,9 +9,12 @@ import {
 import bookmarkPlugin from "@notion-render/bookmark-plugin";
 import { NotionRenderer } from "@notion-render/client";
 import hljsPlugin from "@notion-render/hljs-plugin";
-import { useEffect } from "react";
 import Reveal from "@/components/util/Reveal";
 import Head from "next/head";
+import { CalendarIcon } from "@/components/blogs/CalendarIcon";
+import { AiFillMail } from "react-icons/ai";
+import Link from "next/link";
+import { CiCircleMore } from "react-icons/ci";
 
 export async function getStaticPaths() {
   const pages = await fetchPages();
@@ -58,9 +61,9 @@ export async function getStaticProps({ params }: any) {
   };
 }
 
-function Hero({ backgroundImageUrl, title, description, tags }: any) {
+function Hero({ backgroundImageUrl, title, description, tags, date }: any) {
   return (
-    <div className="relative h-[250px] md:h-[500px]">
+    <div className="relative py-10 md:h-[500px]">
       {/* Background Image */}
       <div className="absolute inset-0 blur-[3px]">
         <img
@@ -74,19 +77,26 @@ function Hero({ backgroundImageUrl, title, description, tags }: any) {
 
       {/* Text Content */}
       <div className="relative z-10 flex flex-col items-start justify-center h-full px-4 md:px-8 mx-auto max-w-5xl">
-        <Reveal>
-          <div className="flex flex-col items-start justify-center">
-            <h1 className="pointer-events-auto text-4xl sm:text-6xl font-black text-zinc-100 md:text-8xl">
-              {title}
-            </h1>
+        <div className="flex flex-col items-start justify-center">
+          <Reveal>
+            <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-2">
+              <h1 className="flex flex-row pointer-events-auto text-3xl sm:text-6xl font-black text-zinc-100 md:text-7xl">
+                {title}
+              </h1>
+              <CalendarIcon dateString={date} />
+            </div>
+          </Reveal>
+          <Reveal>
             <p className="pointer-events-auto leading-relaxed md:leading-relaxed max-w-xl text-sm text-zinc-300 md:text-base mt-2">
               {description}
             </p>
+          </Reveal>
+          <Reveal>
             <div className="flex flex-wrap gap-4 text-sm text-burnLight my-2">
               {tags.join(" - ")}
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </div>
   );
@@ -111,10 +121,14 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
   const tags =
     pageDetails.properties.Tags.multi_select.map((tag: any) => tag.name) || [];
 
+  const date = pageDetails.properties.Date.date.start;
+
   return (
     <>
       <Head>
-        <title>{pageDetails.properties.Title.title[0].plain_text} | Sam Fitz</title>
+        <title>
+          {pageDetails.properties.Title.title[0].plain_text} | Sam Fitz
+        </title>
       </Head>
       <div className="grid grid-cols-[54px_1fr]">
         <SideBar />
@@ -124,13 +138,48 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
             backgroundImageUrl={pageDetails.cover.external.url}
             title={pageDetails.properties.Title.title[0].plain_text}
             description={pageDetails.properties.Summary.rich_text[0].plain_text}
+            date={date}
             tags={tags}
           />
-          <div className="mx-auto max-w-5xl px-4 md:px-8 space-y-32 pb-24 w-full">
+          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 space-y-32 pb-12 w-full">
             <div
-              className="text-xl mt-10 mx-auto leading-10 prose max-w-none text-justify prose-p:text-white prose-headings:text-white prose-blockquote:text-white"
+              className="text-xl mt-10 mx-auto leading-10 prose max-w-none md:text-justify prose-p:text-white prose-headings:text-white prose-blockquote:text-white"
               dangerouslySetInnerHTML={{ __html: html }}
             />
+          </div>
+          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 space-y-32 pb-12 w-full">
+            <Reveal width="w-fit">
+              <Link href="/blog" className="no-underline">
+                <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                  <CiCircleMore />
+                  <span>View more posts.</span>
+                </div>
+              </Link>
+            </Reveal>
+          </div>
+          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto bg-zinc-800 px-8 py-12 rounded-xl flex flex-col items-center justify-center mb-24">
+            <Reveal width="w-full">
+              <>
+                <h3 className="text-xl md:text-3xl text-center text-white font-black mb-2 mt-0">
+                  Want to discuss this post<span className="text-burn">?</span>
+                </h3>
+                <p className="text-center text-zinc-300 leading-relaxed">
+                  While I haven't enabled comments to keep things simple and
+                  focused, I'm always open to hearing from readers!
+                </p>
+                <p className="text-center text-zinc-300 leading-relaxed mt-0">
+                  If you'd like to discuss anything, feel free to email me at
+                </p>
+              </>
+            </Reveal>
+            <Reveal width="w-full">
+              <Link href="mailto:hello@samdoes.dev" className="no-underline">
+                <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                  <AiFillMail />
+                  <span>hello@samdoes.dev</span>
+                </div>
+              </Link>
+            </Reveal>
           </div>
         </main>
       </div>

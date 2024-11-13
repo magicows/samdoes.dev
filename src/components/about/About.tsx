@@ -38,7 +38,7 @@ export const About = () => {
             </p>
           </Reveal>
           <Reveal>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 md:mb-8">
               <div className="flex items-center gap-4 text-sm text-burnLight">
                 <span>My links</span>
                 <AiOutlineArrowRight />

@@ -28,11 +28,19 @@ const config: Config = {
         rotate: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' }, // Full rotation
-        }
+        },
+        rotaterrr: {
+          '0%': { transform: 'rotate(50deg)' },
+          '100%': { transform: 'rotate(14deg)' },
+        },
       },
       animation: {
         pulse: 'vibe 1s infinite', // Pulses every second
         rotate: 'rotate 5s linear infinite',   // Slow rotation over 10 seconds
+        rotateonefour: 'rotaterrr 2s linear forwards',
+      },
+      animationDelay: {
+        '3100': '3.1s',
       }
     },
   },

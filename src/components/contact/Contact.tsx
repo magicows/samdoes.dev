@@ -17,7 +17,7 @@ export const Contact = () => {
             <Link
               href="https://www.linkedin.com/in/samfitzpatrick1"
               target="_blank"
-              className="text-burnLight hover:underline"
+              className="text-burn hover:underline"
             >
               Linkedin
             </Link>{" "}
@@ -25,7 +25,7 @@ export const Contact = () => {
             <Link
               href="https://instagram.com/samfitzpatrick"
               target="_blank"
-              className="text-burnLight hover:underline"
+              className="text-burn hover:underline"
             >
               Instagram
             </Link>{" "}
@@ -34,7 +34,7 @@ export const Contact = () => {
         </Reveal>
         <Reveal width="w-full">
           <Link href="mailto:hello@samdoes.dev">
-            <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors">
+            <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight text-burn transition-colors">
               <AiFillMail />
               <span>hello@samdoes.dev</span>
             </div>

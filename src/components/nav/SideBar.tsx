@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SideBarLink } from "./SideBarLink";
+import { useRouter } from "next/router";
 
-export const SideBar = ({ posts = [] }) => {
+export const SideBar = ({ posts = { results: [] } }) => {
   const [selected, setSelected] = useState("");
+  const router = useRouter();
+  // Check if the current page is the homepage
+  const isHomePage = router.pathname === "/";
 
   useEffect(() => {
     const sections = document.querySelectorAll(".section-wrapper");
@@ -23,6 +27,8 @@ export const SideBar = ({ posts = [] }) => {
     const observer = new IntersectionObserver(callback, options);
 
     sections.forEach((section) => observer.observe(section));
+
+    console.log(!isHomePage && posts.results.length >= 1 );
   }, []);
 
   return (
@@ -51,7 +57,7 @@ export const SideBar = ({ posts = [] }) => {
       >
         Exp.
       </SideBarLink>
-      {posts.length && (
+      {isHomePage && posts.results.length >= 1 ? (
         <SideBarLink
           selected={selected}
           setSelected={setSelected}
@@ -60,7 +66,17 @@ export const SideBar = ({ posts = [] }) => {
         >
           Posts.
         </SideBarLink>
-      )}
+      ) : null}
+      {!isHomePage ? (
+        <SideBarLink
+          selected={selected}
+          setSelected={setSelected}
+          value="Posts"
+          href="blog"
+        >
+          Posts.
+        </SideBarLink>
+      ) : null}
       <SideBarLink
         selected={selected}
         setSelected={setSelected}

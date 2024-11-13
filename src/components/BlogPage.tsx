@@ -7,20 +7,16 @@ import { Projects } from "./projects/Projects";
 import { Experience } from "./experience/Experience";
 import { Contact } from "./contact/Contact";
 import  Blogs from "./blogs/Blogs";
+import BlogCollation from "./blogs/BlogCollation";
 
-export const HomPage = ({posts = []} : any) => {
+export const BlogPage = ({posts = []} : any) => {
   return (
     <div className="grid grid-cols-[54px_1fr]">
       <SideBar posts={posts} />
       <main>
         <Header />
         <div className="mx-auto max-w-5xl px-4 md:px-8 space-y-32 pb-24">
-          <Hero />
-          <About />
-          {/* <Projects />           */}
-          <Experience />
-          {posts.results.length >= 1 ? <Blogs posts={posts} /> : <></>}
-          <Contact />
+          {posts.results.length >= 1 ? <BlogCollation posts={posts} /> : <></>}
         </div>
       </main>
     </div>

@@ -23,6 +23,67 @@
   @apply text-zinc-400 italic
 }
 
+.notion-text-code{
+  @apply text-burn px-[5px] py-[2.5px] rounded bg-zinc-700 
+}
+
+.notion-code, .notion-code-block, .notion-text-code, .prose p{
+ @apply text-base lg:text-lg 
+}
+
+/* Base styling for the code block container */
+.language-javascript {
+  @apply relative  text-white rounded-lg overflow-x-auto;
+}
+
+/* Before pseudo-class to show the file type */
+/* .language-javascript::before {
+  content: ".js";
+  @apply absolute top-2 right-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded;
+} */
+
+/* General styling for code */
+.hljs {
+  @apply text-sm font-mono leading-relaxed;
+}
+
+/* Syntax highlighting styles */
+.hljs-title {
+  @apply text-burnLighter;
+}
+
+.hljs-function {
+  @apply text-blue-400;
+}
+
+.hljs-keyword {
+  @apply text-purple-400 font-semibold;
+}
+
+.hljs-string {
+  @apply text-yellow-400;
+}
+
+.hljs-number {
+  @apply text-pink-400;
+}
+
+.hljs-comment {
+  @apply text-gray-500 italic;
+}
+
+.hljs-operator {
+  @apply text-red-400;
+}
+
+.hljs-punctuation {
+  @apply text-gray-400;
+}
+
+.hljs-attr {
+  @apply text-indigo-400;
+}
+
 html {
   scroll-behavior: smooth;
 }
