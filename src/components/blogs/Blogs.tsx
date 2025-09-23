@@ -13,7 +13,7 @@ export default function Blogs({ posts }) {
     <section className="section-wrapper" id="blogs">
       <SectionHeader title="Recently" dir="l" />
       <div className="grid gap-12 grid-cols-1 md:grid-cols-2">
-        {posts.results.map((post) => {
+        {posts.results.slice(0, 2).map((post) => {
           return <Blog key={post.id} post={post} />;
         })}
       </div>

@@ -76,6 +76,10 @@
   @apply text-red-400;
 }
 
+.notion-bulleted_list_item{
+  @apply text-white
+}
+
 .hljs-punctuation {
   @apply text-gray-400;
 }
@@ -86,4 +90,12 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+.notion-text-href{
+  @apply text-burn underline
+}
+
+.notion-text-href:hover{
+  @apply text-burnLighter;
 }
