@@ -12,11 +12,11 @@
 }
 
 .notion-callout{
-  @apply flex flex-row items-center bg-burnDark
+  @apply flex flex-row items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-900/60 p-4;
 }
 
 .notion-callout .icon{
-  @apply mr-2
+  @apply mt-1;
 }
 
 .notion-image legend{
@@ -77,7 +77,48 @@
 }
 
 .notion-bulleted_list_item{
-  @apply text-white
+  @apply text-white;
+}
+
+/* Notion-rendered typography extras */
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply scroll-mt-24;
+}
+
+.prose a {
+  @apply text-burn underline underline-offset-4;
+}
+
+.prose a:hover {
+  @apply text-burnLighter;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-burn/70 bg-zinc-900/40 px-4 py-2 rounded-r-lg;
+}
+
+.prose blockquote p {
+  @apply text-zinc-200;
+}
+
+.prose pre {
+  @apply bg-zinc-900/70 border border-zinc-700 rounded-xl;
+}
+
+.prose table {
+  @apply w-full text-left border-collapse;
+}
+
+.prose thead th {
+  @apply border-b border-zinc-700 pb-2 text-zinc-200;
+}
+
+.prose tbody td {
+  @apply border-b border-zinc-800 py-2 align-top;
+}
+
+.prose hr {
+  @apply border-zinc-700/80;
 }
 
 .hljs-punctuation {

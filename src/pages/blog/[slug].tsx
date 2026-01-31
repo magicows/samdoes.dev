@@ -108,11 +108,41 @@ interface Props {
   pageDetails: any;
 }
 
+function getPlainText(rt: any[] | undefined): string {
+  return (rt || []).map((x: any) => x?.plain_text).filter(Boolean).join("");
+}
+
+function getPostTitle(pageDetails: any): string {
+  return getPlainText(pageDetails?.properties?.Title?.title) || "Post";
+}
+
+function getPostDescription(pageDetails: any): string {
+  const summary = getPlainText(pageDetails?.properties?.Summary?.rich_text);
+  if (summary) return summary;
+
+  // fallback: basic description if Summary not present
+  return `Blog post by Sam Fitz.`;
+}
+
+function getPostSlug(pageDetails: any): string | undefined {
+  const slug = getPlainText(pageDetails?.properties?.Slug?.rich_text);
+  return slug || undefined;
+}
+
+function getPostCanonicalUrl(pageDetails: any): string {
+  const slug = getPostSlug(pageDetails);
+  return slug ? `https://samdoes.dev/blog/${slug}` : "https://samdoes.dev/blog";
+}
+
+function getPostOgImage(pageDetails: any): string | undefined {
+  return (
+    pageDetails?.cover?.external?.url ||
+    pageDetails?.cover?.file?.url ||
+    undefined
+  );
+}
+
 export default function BlogPost({ content, html, pageDetails }: Props) {
-  // useEffect(() => {
-  //   console.log(content);
-  //   console.log(pageDetails);
-  // }, []);
 
   if (!pageDetails) {
     return <></>;
@@ -126,18 +156,36 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
   return (
     <>
       <Head>
-        <title>
-          {pageDetails.properties.Title.title[0].plain_text} | Sam Fitz
-        </title>
+        <title>{getPostTitle(pageDetails)} | Sam Fitz</title>
+        <meta name="description" content={getPostDescription(pageDetails)} />
+
+        <link rel="canonical" href={getPostCanonicalUrl(pageDetails)} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${getPostTitle(pageDetails)} | Sam Fitz`} />
+        <meta property="og:description" content={getPostDescription(pageDetails)} />
+        <meta property="og:url" content={getPostCanonicalUrl(pageDetails)} />
+        {getPostOgImage(pageDetails) ? (
+          <meta property="og:image" content={getPostOgImage(pageDetails)} />
+        ) : null}
+
+        {/* Twitter */}
+        <meta name="twitter:card" content={getPostOgImage(pageDetails) ? "summary_large_image" : "summary"} />
+        <meta name="twitter:title" content={`${getPostTitle(pageDetails)} | Sam Fitz`} />
+        <meta name="twitter:description" content={getPostDescription(pageDetails)} />
+        {getPostOgImage(pageDetails) ? (
+          <meta name="twitter:image" content={getPostOgImage(pageDetails)} />
+        ) : null}
       </Head>
       <div className="grid grid-cols-[54px_1fr]">
         <SideBar />
         <main>
           <Header />
           <Hero
-            backgroundImageUrl={pageDetails.cover.external.url}
-            title={pageDetails.properties.Title.title[0].plain_text}
-            description={pageDetails.properties.Summary.rich_text[0].plain_text}
+            backgroundImageUrl={getPostOgImage(pageDetails) || "/og-default.jpg"}
+            title={getPostTitle(pageDetails)}
+            description={getPostDescription(pageDetails)}
             date={date}
             tags={tags}
           />

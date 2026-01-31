@@ -17,7 +17,19 @@ export default function Blogs({posts}) {
   return (
     <>
       <Head>
-        <title>Sam Fitz - Software Dev</title>
+        <title>Posts | Sam Fitz</title>
+        <meta
+          name="description"
+          content="Blog posts about React, React Native, infrastructure, and building things."
+        />
+        <link rel="canonical" href="https://samdoes.dev/blog" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Posts | Sam Fitz" />
+        <meta
+          property="og:description"
+          content="Blog posts about React, React Native, infrastructure, and building things."
+        />
+        <meta property="og:url" content="https://samdoes.dev/blog" />
       </Head>
       <main className={inter.className}>
        <BlogPage posts={posts} />
