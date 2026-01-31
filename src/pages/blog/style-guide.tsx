@@ -44,7 +44,7 @@ const sampleHtml = `
   <h2>Code block</h2>
   <pre class="notion-code-block"><code class="hljs language-javascript">
 const hello = (name) => {
-  console.log(\`Hello, \\${name}!\`)
+  console.log('Hello, ' + name + '!')
 }
   </code></pre>
 
