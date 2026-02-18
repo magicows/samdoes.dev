@@ -12,31 +12,35 @@
 }
 
 .notion-callout{
-  @apply flex flex-row items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-900/60 p-4 mb-6;
+  @apply flex flex-row items-start gap-4 rounded-xl border border-burn/20 bg-burn/5 p-5 mb-8 shadow-sm;
 }
 
 .notion-callout .icon{
-  @apply mt-1 shrink-0 grayscale brightness-125;
+  @apply mt-0.5 text-xl shrink-0 leading-none;
 }
 
-.notion-callout p {
-  @apply m-0 leading-normal;
+.notion-callout div p {
+  @apply m-0 leading-relaxed text-zinc-200;
+}
+
+.notion-callout div p strong {
+  @apply text-burn font-bold block mb-1;
 }
 
 .notion-image {
-  @apply my-8 flex flex-col items-center;
+  @apply my-10 flex flex-col items-center;
 }
 
 .notion-image img {
-  @apply rounded-xl border border-zinc-800 shadow-2xl;
+  @apply rounded-2xl border border-zinc-800 shadow-2xl transition-transform hover:scale-[1.01];
 }
 
 .notion-image legend{
-  @apply text-zinc-500 text-sm italic mt-3;
+  @apply text-zinc-500 text-sm italic mt-4 tracking-tight;
 }
 
 .notion-text-code{
-  @apply text-burn px-[5px] py-[2px] rounded bg-zinc-800 border border-zinc-700 font-mono text-sm;
+  @apply text-burn px-[6px] py-[2px] rounded-md bg-zinc-800/80 border border-zinc-700/50 font-mono text-[0.9em] align-baseline;
 }
 
 .notion-code, .notion-code-block, .notion-text-code, .prose p{
@@ -45,98 +49,107 @@
 
 /* Base styling for the code block container */
 .language-javascript {
-  @apply relative text-white rounded-lg overflow-x-auto p-4;
+  @apply relative text-zinc-100 rounded-lg overflow-x-auto;
 }
 
 /* General styling for code blocks inside prose */
 .prose pre {
-  @apply bg-zinc-950 border border-zinc-800 rounded-xl p-0 my-8 shadow-inner;
+  @apply bg-zinc-950 border border-zinc-800/50 rounded-2xl p-0 my-10 shadow-2xl;
 }
 
 .prose pre code {
-  @apply block p-6 leading-relaxed bg-transparent border-none;
+  @apply block p-8 leading-relaxed bg-transparent border-none scrollbar-thin scrollbar-thumb-zinc-800;
 }
 
-/* Syntax highlighting styles */
+/* Syntax highlighting styles (VS Code Dark+ inspired) */
 .hljs {
-  @apply font-mono text-[15px];
+  @apply font-mono text-[14px] md:text-[15px];
 }
 
-.hljs-title, .hljs-title.function_ {
-  @apply text-blue-300;
+.hljs-keyword, .hljs-selector-tag {
+  @apply text-pink-400 font-semibold;
 }
 
-.hljs-keyword {
-  @apply text-pink-400 font-medium;
+.hljs-string, .hljs-doctag {
+  @apply text-emerald-300;
 }
 
-.hljs-string {
-  @apply text-emerald-400;
+.hljs-title, .hljs-section, .hljs-selector-id {
+  @apply text-blue-300 font-bold;
 }
 
-.hljs-number, .hljs-literal {
-  @apply text-orange-400;
+.hljs-title.function_, .hljs-function {
+  @apply text-sky-300;
+}
+
+.hljs-number, .hljs-literal, .hljs-variable {
+  @apply text-orange-300;
 }
 
 .hljs-comment {
   @apply text-zinc-500 italic;
 }
 
+.hljs-attr, .hljs-attribute {
+  @apply text-indigo-300;
+}
+
 .hljs-operator, .hljs-punctuation {
   @apply text-zinc-400;
 }
 
-.hljs-params {
-  @apply text-zinc-300;
-}
-
 .notion-bulleted_list_item{
-  @apply text-white mb-2;
+  @apply text-zinc-300 mb-3 pl-2;
 }
 
 /* Notion-rendered typography extras */
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  @apply scroll-mt-24 font-black tracking-tight mt-12 mb-6;
+  @apply scroll-mt-24 font-black tracking-tighter text-white mt-16 mb-8;
 }
 
-.prose h1 { @apply text-4xl; }
-.prose h2 { @apply text-3xl border-b border-zinc-800 pb-2; }
+.prose h1 { @apply text-5xl; }
+.prose h2 { @apply text-4xl border-b-2 border-zinc-800 pb-3; }
 .prose h3 { @apply text-2xl; }
 
 .prose p {
-  @apply mb-6 leading-8 text-zinc-300;
+  @apply mb-8 leading-9 text-zinc-300/90;
 }
 
 .prose a {
-  @apply text-burn font-medium underline underline-offset-4 decoration-burn/30 hover:decoration-burn transition-all;
+  @apply text-burn font-bold underline underline-offset-[6px] decoration-burn/20 hover:decoration-burn hover:bg-burn/5 rounded-sm px-0.5 -mx-0.5 transition-all;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-burn/50 bg-burn/5 px-6 py-4 rounded-r-xl my-8 italic;
+  @apply border-l-[6px] border-burn/40 bg-zinc-900/40 px-8 py-6 rounded-r-2xl my-10 relative overflow-hidden;
+}
+
+.prose blockquote::before {
+  content: '"';
+  @apply absolute -top-4 -left-2 text-8xl text-burn/10 font-serif pointer-events-none;
 }
 
 .prose blockquote p {
-  @apply text-zinc-100 m-0;
+  @apply text-zinc-100 m-0 italic text-xl leading-relaxed;
 }
 
 .prose table {
-  @apply w-full text-left border-collapse my-8 rounded-lg overflow-hidden border border-zinc-800;
+  @apply w-full text-left border-collapse my-12 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900/20 shadow-lg;
 }
 
 .prose thead th {
-  @apply bg-zinc-900 border-b border-zinc-800 p-4 text-zinc-100 font-bold uppercase text-xs tracking-wider;
+  @apply bg-zinc-900/80 border-b-2 border-zinc-800 p-5 text-zinc-100 font-black uppercase text-xs tracking-widest;
 }
 
 .prose tbody td {
-  @apply border-b border-zinc-900 p-4 align-top text-zinc-400 text-sm;
+  @apply border-b border-zinc-800/50 p-5 align-top text-zinc-300 text-[15px];
 }
 
-.prose tbody tr:last-child td {
-  @apply border-b-0;
+.prose tbody tr:hover td {
+  @apply bg-zinc-800/10;
 }
 
 .prose hr {
-  @apply border-zinc-800 my-12;
+  @apply border-zinc-800 my-16 border-t-2 border-dashed;
 }
 
 .hljs-punctuation {
