@@ -98,8 +98,20 @@
   @apply text-zinc-400;
 }
 
-.notion-bulleted_list_item{
+.notion-bulleted_list_item, .prose ol li {
   @apply text-zinc-300 mb-3 pl-2;
+}
+
+.prose ol {
+  @apply list-decimal list-outside ml-6 mb-8;
+}
+
+.prose ul {
+  @apply list-disc list-outside ml-6 mb-8;
+}
+
+.prose p strong, .prose li strong {
+  @apply text-white font-bold tracking-tight;
 }
 
 /* Notion-rendered typography extras */
