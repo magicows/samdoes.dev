@@ -12,113 +12,131 @@
 }
 
 .notion-callout{
-  @apply flex flex-row items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-900/60 p-4;
+  @apply flex flex-row items-start gap-3 rounded-xl border border-zinc-700 bg-zinc-900/60 p-4 mb-6;
 }
 
 .notion-callout .icon{
-  @apply mt-1;
+  @apply mt-1 shrink-0 grayscale brightness-125;
+}
+
+.notion-callout p {
+  @apply m-0 leading-normal;
+}
+
+.notion-image {
+  @apply my-8 flex flex-col items-center;
+}
+
+.notion-image img {
+  @apply rounded-xl border border-zinc-800 shadow-2xl;
 }
 
 .notion-image legend{
-  @apply text-zinc-400 italic
+  @apply text-zinc-500 text-sm italic mt-3;
 }
 
 .notion-text-code{
-  @apply text-burn px-[5px] py-[2.5px] rounded bg-zinc-700 
+  @apply text-burn px-[5px] py-[2px] rounded bg-zinc-800 border border-zinc-700 font-mono text-sm;
 }
 
 .notion-code, .notion-code-block, .notion-text-code, .prose p{
- @apply text-base lg:text-lg 
+ @apply text-base lg:text-lg;
 }
 
 /* Base styling for the code block container */
 .language-javascript {
-  @apply relative  text-white rounded-lg overflow-x-auto;
+  @apply relative text-white rounded-lg overflow-x-auto p-4;
 }
 
-/* Before pseudo-class to show the file type */
-/* .language-javascript::before {
-  content: ".js";
-  @apply absolute top-2 right-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded;
-} */
+/* General styling for code blocks inside prose */
+.prose pre {
+  @apply bg-zinc-950 border border-zinc-800 rounded-xl p-0 my-8 shadow-inner;
+}
 
-/* General styling for code */
-.hljs {
-  @apply text-sm font-mono leading-relaxed;
+.prose pre code {
+  @apply block p-6 leading-relaxed bg-transparent border-none;
 }
 
 /* Syntax highlighting styles */
-.hljs-title {
-  @apply text-burnLighter;
+.hljs {
+  @apply font-mono text-[15px];
 }
 
-.hljs-function {
-  @apply text-blue-400;
+.hljs-title, .hljs-title.function_ {
+  @apply text-blue-300;
 }
 
 .hljs-keyword {
-  @apply text-purple-400 font-semibold;
+  @apply text-pink-400 font-medium;
 }
 
 .hljs-string {
-  @apply text-yellow-400;
+  @apply text-emerald-400;
 }
 
-.hljs-number {
-  @apply text-pink-400;
+.hljs-number, .hljs-literal {
+  @apply text-orange-400;
 }
 
 .hljs-comment {
-  @apply text-gray-500 italic;
+  @apply text-zinc-500 italic;
 }
 
-.hljs-operator {
-  @apply text-red-400;
+.hljs-operator, .hljs-punctuation {
+  @apply text-zinc-400;
+}
+
+.hljs-params {
+  @apply text-zinc-300;
 }
 
 .notion-bulleted_list_item{
-  @apply text-white;
+  @apply text-white mb-2;
 }
 
 /* Notion-rendered typography extras */
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  @apply scroll-mt-24;
+  @apply scroll-mt-24 font-black tracking-tight mt-12 mb-6;
+}
+
+.prose h1 { @apply text-4xl; }
+.prose h2 { @apply text-3xl border-b border-zinc-800 pb-2; }
+.prose h3 { @apply text-2xl; }
+
+.prose p {
+  @apply mb-6 leading-8 text-zinc-300;
 }
 
 .prose a {
-  @apply text-burn underline underline-offset-4;
-}
-
-.prose a:hover {
-  @apply text-burnLighter;
+  @apply text-burn font-medium underline underline-offset-4 decoration-burn/30 hover:decoration-burn transition-all;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-burn/70 bg-zinc-900/40 px-4 py-2 rounded-r-lg;
+  @apply border-l-4 border-burn/50 bg-burn/5 px-6 py-4 rounded-r-xl my-8 italic;
 }
 
 .prose blockquote p {
-  @apply text-zinc-200;
-}
-
-.prose pre {
-  @apply bg-zinc-900/70 border border-zinc-700 rounded-xl;
+  @apply text-zinc-100 m-0;
 }
 
 .prose table {
-  @apply w-full text-left border-collapse;
+  @apply w-full text-left border-collapse my-8 rounded-lg overflow-hidden border border-zinc-800;
 }
 
 .prose thead th {
-  @apply border-b border-zinc-700 pb-2 text-zinc-200;
+  @apply bg-zinc-900 border-b border-zinc-800 p-4 text-zinc-100 font-bold uppercase text-xs tracking-wider;
 }
 
 .prose tbody td {
-  @apply border-b border-zinc-800 py-2 align-top;
+  @apply border-b border-zinc-900 p-4 align-top text-zinc-400 text-sm;
+}
+
+.prose tbody tr:last-child td {
+  @apply border-b-0;
 }
 
 .prose hr {
-  @apply border-zinc-700/80;
+  @apply border-zinc-800 my-12;
 }
 
 .hljs-punctuation {
