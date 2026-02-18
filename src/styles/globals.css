@@ -58,7 +58,7 @@
 }
 
 .prose pre code {
-  @apply block p-8 leading-relaxed bg-transparent border-none scrollbar-thin scrollbar-thumb-zinc-800;
+  @apply block p-8 leading-relaxed bg-transparent border-none;
 }
 
 /* Syntax highlighting styles (VS Code Dark+ inspired) */
