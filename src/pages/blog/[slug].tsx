@@ -135,7 +135,7 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
         <main>
           <Header />
           <Hero
-            backgroundImageUrl={pageDetails.cover.external.url}
+            backgroundImageUrl={pageDetails.cover?.external?.url || pageDetails.cover?.file?.url || ""}
             title={pageDetails.properties.Title.title[0].plain_text}
             description={pageDetails.properties.Summary.rich_text[0].plain_text}
             date={date}

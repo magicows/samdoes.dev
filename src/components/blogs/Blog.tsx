@@ -70,7 +70,7 @@ export const Blog = ({ post }: Props) => {
   const slug = post.properties.Slug.rich_text[0]?.plain_text;
   const summary =
     post.properties.Summary.rich_text[0]?.plain_text || "Not yet.";
-  const image = post.cover.external.url;
+  const image = post.cover?.external?.url || post.cover?.file?.url || "";
   
   return (
     <>
