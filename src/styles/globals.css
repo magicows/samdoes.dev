@@ -149,15 +149,20 @@
 }
 
 .prose thead th {
-  @apply bg-zinc-900/80 border-b-2 border-zinc-800 p-5 text-zinc-100 font-black uppercase text-xs tracking-widest;
+  @apply bg-zinc-950/80 border-b-2 border-zinc-800 p-5 text-zinc-100 font-black uppercase text-xs tracking-widest;
 }
 
 .prose tbody td {
   @apply border-b border-zinc-800/50 p-5 align-top text-zinc-300 text-[15px];
 }
 
+/* subtle zebra striping improves scanability */
+.prose tbody tr:nth-child(2n) td {
+  @apply bg-zinc-950/20;
+}
+
 .prose tbody tr:hover td {
-  @apply bg-zinc-800/10;
+  @apply bg-zinc-800/15;
 }
 
 .prose hr {
@@ -177,7 +182,8 @@ html {
 }
 
 .notion-text-href{
-  @apply text-burn underline
+  /* Match the prose link styling so Notion-injected anchors feel consistent */
+  @apply text-burn font-bold underline underline-offset-[6px] decoration-burn/20 hover:decoration-burn hover:bg-burn/5 rounded-sm px-0.5 -mx-0.5 transition-all;
 }
 
 .notion-text-href:hover{
