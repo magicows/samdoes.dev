@@ -51,11 +51,18 @@ export async function getStaticProps({ params }: any) {
 
   const html = await renderer.render(...pageBlocks);
 
+  // Notion bookmark plugin can emit a literal "undefined" when metadata is missing.
+  // Strip it so the UI doesn't show confusing filler.
+  const cleanedHtml = html.replace(
+    /<p class="bookmark-description">\s*undefined\s*<\/p>/g,
+    ""
+  );
+
   return {
     props: {
       pageDetails: page,
       content: pageBlocks,
-      html: html,
+      html: cleanedHtml,
     },
     revalidate: 60 * 5,
   };

@@ -183,3 +183,35 @@ html {
 .notion-text-href:hover{
   @apply text-burnLighter;
 }
+
+/* Notion toggle (<details><summary/>) */
+.notion-toggle {
+  @apply my-8 rounded-2xl border border-zinc-800/70 bg-zinc-900/30 px-6 py-5 shadow-lg;
+}
+
+.notion-toggle summary {
+  @apply cursor-pointer select-none font-black tracking-tight text-zinc-100;
+  list-style: none;
+}
+
+.notion-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.notion-toggle summary::before {
+  content: "▸";
+  @apply inline-block mr-3 text-burnLight;
+  transform: translateY(-1px);
+}
+
+.notion-toggle[open] summary::before {
+  content: "▾";
+}
+
+.notion-toggle > p {
+  @apply mt-5 mb-0;
+}
+
+.notion-toggle > blockquote {
+  @apply my-6;
+}
