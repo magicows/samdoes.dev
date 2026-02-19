@@ -1,69 +1,79 @@
-# Hey! Welcome to the template!
+# samdoes.dev
 
-All of Hover's templates are built with React, NextJS and TailwindCSS. If you're already comfortable with NextJS, feel free to dig in and get started. If not, we'll provide some details below to get you up and running.
+Personal website + blog for Sam Fitzpatrick.
 
-Demos for all of our templates can be found [here](https://www.hover.dev/templates).
+- **Frontend:** Next.js (Pages Router) + React + TypeScript
+- **Styling:** Tailwind CSS (+ a small amount of custom CSS for Notion-rendered blocks)
+- **Content source:** Notion database (acts as a lightweight CMS)
+- **Deployment:** Vercel (preview deploys on branches)
 
-## Let's get things running
+## What this repo contains
 
-This template is built on top of [NextJS](https://nextjs.org/), a full stack development framework built on top of React.
+- **Home page**: a simple personal/portfolio landing page
+- **Blog**: statically generated/ISR pages that render posts pulled from Notion
+- **Revalidate endpoint**: used to refresh ISR content when Notion changes
 
-We won't take time here going over exactly how NextJS works on a deep level (to be fair, this project doesn't use Next at a deep level), but if you're interested in learning, their docs are [here](https://nextjs.org/docs/getting-started).
+## Local development
 
-At the root of your project, you'll see a `package.json` file defining our dependencies.
+### Prerequisites
 
-Most of this is boilerplate, but I will call out the following dependencies:
+- Node (see `.nvmrc`)
+- npm
 
-- `framer-motion` -> A react based animation library used for most animations
-- `animejs` -> A secondary animation library used for the staggered grid animation in the hero section.
-- `tailwindcss` -> All styling uses Tailwind CSS for this project
+### Install
 
-Now that that's out of the way, you can get your project running by first installing dependencies.
-
-From your terminal, run:
-
-```
+```bash
 npm install
-# or
-yarn install
 ```
 
-This will take a minute or two, but once that's done, you should be able to run the following command:
+### Environment variables
 
-```
+Create a `.env` file (this repo expects it to exist locally).
+
+At minimum:
+
+- `NOTION_TOKEN`
+- `NOTION_DATABASE_ID`
+
+Optional (if you use the Spotify widget / endpoint):
+
+- Spotify-related env vars (see `src/pages/api/spotify.ts`)
+
+### Run dev server
+
+```bash
 npm run dev
-# or
-yarn dev
 ```
 
-This will start your project on `localhost:3000`
+Then open: http://localhost:3000
 
-## The file structure
+### Build
 
-Because this is a NextJS project, we follow the standard NextJS pattern for organizing this project. If you're familiar with the latest in Next, you might know about the relatively new `app` directory. This particular project uses the older `pages` directory as it's a bit simpler for beginners and makes it easier for those of you who'd like to migrate these components out of NextJS.
+```bash
+npm run build
+npm run start
+```
 
-If you WOULD like to upgrade to the app directory, you can find docs on that [here](https://nextjs.org/docs/pages/building-your-application/upgrading/app-router-migration), but it shouldn't make any difference for a project like this one.
+## Content model (Notion)
 
-Inside of the `src/pages/` directly you'll find 3 files:
+Posts are queried from the Notion database defined by `NOTION_DATABASE_ID`.
 
-- `_app.tsx/jsx` -> A file which wraps around every page in our app. For this project, we've left this empty.
-- `_document.tsx/jsx` -> Essentially the NextJS version of your base "HTML document". Nothing fancy here beyond a couple of tailwind classes.
-- `index.tsx/jsx` -> This represents our home route. You should start digging around from here. We also define our font class names here, imported from the `src/fonts` file. If you'd like to update this font, check out [this doc](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts).
+Expected properties:
 
-To add MORE routes to your project, see [this doc](https://nextjs.org/docs/basic-features/pages).
+- **Title** (title)
+- **Slug** (rich text)
+- **Summary** (rich text)
+- **Tags** (multi-select)
+- **Date** (date)
+- **Status** (status) — only `Live` posts are published
 
-Inside of the `/src/components/` directory you'll find all of the components being rendered in our home route.
+## Notes / conventions
 
-## Styling
+- Work happens on `dev`. PRs/merges to `main` are intentional (manual approval).
+- Notion blocks are rendered to HTML in `src/pages/blog/[slug].tsx`.
+- Styling for Notion-rendered blocks lives primarily in `src/styles/globals.css`.
 
-As noted, styling is done using [Tailwind CSS](https://tailwindcss.com/).
+## Troubleshooting
 
----
-
-## Preview deployment test
-
-This line exists to verify Vercel preview deployments work for public repo branches.
-
-Open up the `tailwind.config.js/ts` file to add to your configuration. For this project, we've left this as an empty template.
-
-The color palette for this project is made up of the tailwind `indigo` palette for primary colors, the `zinc` palette for neutral colors, and a few blacks/whites/other utility colors here and there. If you'd like to update these palettes, you could do a find and replace throughout the repository, for instance changing all instances of `indigo` to `red`.
+- If a post doesn’t show up, check its **Status** is `Live` and it has a **Slug**.
+- If Notion fetches fail, verify `NOTION_TOKEN` and `NOTION_DATABASE_ID`.

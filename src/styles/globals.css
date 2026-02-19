@@ -149,15 +149,20 @@
 }
 
 .prose thead th {
-  @apply bg-zinc-900/80 border-b-2 border-zinc-800 p-5 text-zinc-100 font-black uppercase text-xs tracking-widest;
+  @apply bg-zinc-950/80 border-b-2 border-zinc-800 p-5 text-zinc-100 font-black uppercase text-xs tracking-widest;
 }
 
 .prose tbody td {
   @apply border-b border-zinc-800/50 p-5 align-top text-zinc-300 text-[15px];
 }
 
+/* subtle zebra striping improves scanability */
+.prose tbody tr:nth-child(2n) td {
+  @apply bg-zinc-950/20;
+}
+
 .prose tbody tr:hover td {
-  @apply bg-zinc-800/10;
+  @apply bg-zinc-800/15;
 }
 
 .prose hr {
@@ -177,9 +182,89 @@ html {
 }
 
 .notion-text-href{
-  @apply text-burn underline
+  /* Match the prose link styling so Notion-injected anchors feel consistent */
+  @apply text-burn font-bold underline underline-offset-[6px] decoration-burn/20 hover:decoration-burn hover:bg-burn/5 rounded-sm px-0.5 -mx-0.5 transition-all;
 }
 
 .notion-text-href:hover{
   @apply text-burnLighter;
+}
+
+/* Notion toggle (<details><summary/>) */
+.notion-toggle {
+  @apply my-8 rounded-2xl border border-zinc-800/70 bg-zinc-900/30 px-6 py-5 shadow-lg;
+}
+
+.notion-toggle summary {
+  @apply cursor-pointer select-none font-black tracking-tight text-zinc-100;
+  list-style: none;
+}
+
+.notion-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.notion-toggle summary::before {
+  content: "▸";
+  @apply inline-block mr-3 text-burnLight;
+  transform: translateY(-1px);
+}
+
+.notion-toggle[open] summary::before {
+  content: "▾";
+}
+
+.notion-toggle > p {
+  @apply mt-5 mb-0;
+}
+
+.notion-toggle > blockquote {
+  @apply my-6;
+}
+
+/* Notion bookmark */
+.notion-bookmark {
+  @apply no-underline my-10 grid grid-cols-1 md:grid-cols-[1fr_320px] overflow-hidden rounded-2xl border border-zinc-800/70 bg-zinc-900/30 shadow-2xl;
+}
+
+.notion-bookmark:hover {
+  @apply border-burn/40;
+}
+
+.notion-bookmark .bookmark-info {
+  @apply p-6 md:p-8;
+}
+
+.notion-bookmark .bookmark-title {
+  @apply text-zinc-100 font-black tracking-tight text-xl md:text-2xl;
+}
+
+.notion-bookmark .bookmark-description {
+  @apply text-zinc-300/90 mt-3 leading-relaxed;
+}
+
+.notion-bookmark .bookmark-footer {
+  @apply mt-5 flex items-center gap-3 text-xs text-zinc-400;
+}
+
+.notion-bookmark .bookmark-logo {
+  @apply h-4 w-4 rounded-sm;
+}
+
+.notion-bookmark .bookmark-url {
+  @apply truncate;
+}
+
+.notion-bookmark .bookmark-thumbnail {
+  @apply border-t md:border-t-0 md:border-l border-zinc-800/70 bg-zinc-950/20;
+}
+
+.notion-bookmark .bookmark-thumbnail img {
+  @apply w-full h-full object-cover;
+}
+
+@media (min-width: 768px) {
+  .notion-bookmark .bookmark-thumbnail {
+    max-height: 220px;
+  }
 }

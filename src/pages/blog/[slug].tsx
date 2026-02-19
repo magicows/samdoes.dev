@@ -16,19 +16,18 @@ import { AiFillMail } from "react-icons/ai";
 import Link from "next/link";
 import { CiCircleMore } from "react-icons/ci";
 
+function plainText(rt: any[] | undefined): string {
+  return (rt || []).map((x: any) => x?.plain_text).filter(Boolean).join("");
+}
+
 export async function getStaticPaths() {
   const pages = await fetchPages();
+  const results = (pages?.results || []) as any[];
 
-  if (pages.results.length === 0) {
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
-
-  const paths = pages.results.map((post: any) => ({
-    params: { slug: post.properties.Slug.rich_text[0].plain_text },
-  }));
+  const paths = results
+    .map((post: any) => plainText(post?.properties?.Slug?.rich_text))
+    .filter(Boolean)
+    .map((slug: string) => ({ params: { slug } }));
 
   return {
     paths,
@@ -40,7 +39,14 @@ export async function getStaticProps({ params }: any) {
   const slug = params?.slug;
 
   const page: any = await fetchBySlug(slug);
-  const pageBlocks: any = await fetchPageBlocks(page?.id);
+  if (!page?.id) {
+    return { notFound: true, revalidate: 60 };
+  }
+
+  const pageBlocks: any = await fetchPageBlocks(page.id);
+  if (!pageBlocks || !Array.isArray(pageBlocks)) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   const renderer = new NotionRenderer({
     client: notion,
@@ -51,11 +57,50 @@ export async function getStaticProps({ params }: any) {
 
   const html = await renderer.render(...pageBlocks);
 
+  // Notion bookmark plugin can emit a literal "undefined" when metadata is missing.
+  // Strip it so the UI doesn't show confusing filler.
+  const cleanedHtml = html.replace(
+    /<p class="bookmark-description">\s*undefined\s*<\/p>/g,
+    ""
+  );
+
+  // Simple prev/next navigation (Live posts only)
+  const all = await fetchPages();
+  const posts = ((all?.results || []) as any[]).filter((p) => {
+    const s = plainText(p?.properties?.Slug?.rich_text);
+    const t = plainText(p?.properties?.Title?.title);
+    return Boolean(s && t);
+  });
+
+  const sorted = posts
+    .slice()
+    .sort((a, b) =>
+      String(b?.properties?.Date?.date?.start || "").localeCompare(
+        String(a?.properties?.Date?.date?.start || "")
+      )
+    );
+
+  const idx = sorted.findIndex(
+    (p) => plainText(p?.properties?.Slug?.rich_text) === slug
+  );
+
+  const prev = idx >= 0 ? sorted[idx + 1] : null; // older
+  const next = idx > 0 ? sorted[idx - 1] : null; // newer
+
+  const toNav = (p: any) => {
+    if (!p) return null;
+    const s = plainText(p?.properties?.Slug?.rich_text);
+    const t = plainText(p?.properties?.Title?.title);
+    if (!s || !t) return null;
+    return { slug: s, title: t };
+  };
   return {
     props: {
       pageDetails: page,
       content: pageBlocks,
-      html: html,
+      html: cleanedHtml,
+      prevPost: toNav(prev),
+      nextPost: toNav(next),
     },
     revalidate: 60 * 5,
   };
@@ -106,6 +151,8 @@ interface Props {
   content: any;
   html: any;
   pageDetails: any;
+  prevPost: { slug: string; title: string } | null;
+  nextPost: { slug: string; title: string } | null;
 }
 
 function getPlainText(rt: any[] | undefined): string {
@@ -146,7 +193,7 @@ function getPostOgImage(pageDetails: any): string | undefined {
   );
 }
 
-export default function BlogPost({ content, html, pageDetails }: Props) {
+export default function BlogPost({ content, html, pageDetails, prevPost, nextPost }: Props) {
 
   if (!pageDetails) {
     return <></>;
@@ -186,6 +233,15 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
         <SideBar />
         <main>
           <Header />
+          <nav aria-label="Breadcrumb" className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pt-6">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-sm font-bold text-zinc-300 hover:text-burnLight transition-colors"
+            >
+              <span aria-hidden="true">←</span>
+              <span>All posts</span>
+            </Link>
+          </nav>
           <Hero
             backgroundImageUrl={getPostOgImage(pageDetails) || "/og-default.jpg"}
             title={getPostTitle(pageDetails)}
@@ -199,17 +255,48 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
-          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 space-y-32 pb-12 w-full">
-            <Reveal width="w-fit">
-              <Link href="/blog" className="no-underline">
-                <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
-                  <CiCircleMore />
-                  <span>View more posts.</span>
-                </div>
-              </Link>
-            </Reveal>
+          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pb-12 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
+                <div className="text-xs uppercase tracking-widest text-zinc-500 font-black">Previous</div>
+                {prevPost ? (
+                  <Link
+                    href={`/blog/${prevPost.slug}`}
+                    className="mt-2 block text-zinc-100 font-black tracking-tight hover:text-burnLight transition-colors"
+                  >
+                    {prevPost.title}
+                  </Link>
+                ) : (
+                  <div className="mt-2 text-zinc-500">No older post</div>
+                )}
+              </div>
+              <div className="rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
+                <div className="text-xs uppercase tracking-widest text-zinc-500 font-black">Next</div>
+                {nextPost ? (
+                  <Link
+                    href={`/blog/${nextPost.slug}`}
+                    className="mt-2 block text-zinc-100 font-black tracking-tight hover:text-burnLight transition-colors"
+                  >
+                    {nextPost.title}
+                  </Link>
+                ) : (
+                  <div className="mt-2 text-zinc-500">No newer post</div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
+              <Reveal width="w-fit">
+                <Link href="/blog" className="no-underline">
+                  <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                    <CiCircleMore />
+                    <span>View all posts</span>
+                  </div>
+                </Link>
+              </Reveal>
+            </div>
           </div>
-          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto bg-zinc-800 px-8 py-12 rounded-xl flex flex-col items-center justify-center mb-24">
+          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto border border-zinc-800/70 bg-zinc-900/30 px-8 py-12 rounded-2xl flex flex-col items-center justify-center mb-24 shadow-2xl">
             <Reveal width="w-full">
               <>
                 <h3 className="text-xl md:text-3xl text-center text-white font-black mb-2 mt-0">
@@ -225,12 +312,17 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
               </>
             </Reveal>
             <Reveal width="w-full">
-              <Link href="mailto:hello@samdoes.dev" className="no-underline">
-                <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
-                  <AiFillMail />
-                  <span>hello@samdoes.dev</span>
-                </div>
-              </Link>
+              <>
+                <Link href="mailto:hello@samdoes.dev" className="no-underline">
+                  <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                    <AiFillMail />
+                    <span>hello@samdoes.dev</span>
+                  </div>
+                </Link>
+                <p className="text-center text-zinc-500 text-sm mt-4 mb-0">
+                  You can also DM me on LinkedIn/X (icons in the header).
+                </p>
+              </>
             </Reveal>
           </div>
         </main>

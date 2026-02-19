@@ -4,7 +4,7 @@ import { OutlineButton } from "../buttons/OutlineButton";
 
 const Hero = () => {
   return (
-    <section className="text-slat-100 overflow-hidden py-24 md:py-32">
+    <section className="text-slate-100 overflow-hidden py-24 md:py-32">
       <div className="relative">
         <div className="pointer-events-none relative z-10">
           <Reveal>
@@ -22,13 +22,12 @@ const Hero = () => {
           </Reveal>
           <Reveal>
             <p className="pointer-events-auto leading-relaxed md:leading-relaxed max-w-xl text-sm text-zinc-300 md:text-base">
-              Currently in Royal Leamington Spa 🏠 I've spent the last 8+ years
-              building and scaling software for some pretty cool companies
-              across stacks including React, React Native, WordPress, Node.JS,
-              and more! 👨‍💻
+              Based in Royal Leamington Spa. I’ve spent the last 8+ years
+              building and scaling software for teams across React, React
+              Native, Node.js, and more.
               <br />
               <br />
-              Think I can help? Let's connect!
+              If you’ve got a project in mind, let’s talk.
             </p>
           </Reveal>
           <Reveal>
