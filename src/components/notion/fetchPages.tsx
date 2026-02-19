@@ -18,7 +18,13 @@ export const fetchPages = async () => {
         equals: "Live",
       },
     },
-  })
+    sorts: [
+      {
+        property: "Date",
+        direction: "descending",
+      },
+    ],
+  });
 };
 
 export const fetchBySlug = async (slug: string) => {
