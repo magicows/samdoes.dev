@@ -225,14 +225,10 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
         <main>
           <Header />
           <nav aria-label="Breadcrumb" className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pt-6">
-<<<<<<< HEAD
-            <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-300 hover:text-burnLight transition-colors">
-=======
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-sm font-bold text-zinc-300 hover:text-burnLight transition-colors"
             >
->>>>>>> origin/feature/design-iteration-contrast-nav
               <span aria-hidden="true">←</span>
               <span>All posts</span>
             </Link>
