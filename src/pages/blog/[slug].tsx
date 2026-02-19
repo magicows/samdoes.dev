@@ -16,19 +16,18 @@ import { AiFillMail } from "react-icons/ai";
 import Link from "next/link";
 import { CiCircleMore } from "react-icons/ci";
 
+function plainText(rt: any[] | undefined): string {
+  return (rt || []).map((x: any) => x?.plain_text).filter(Boolean).join("");
+}
+
 export async function getStaticPaths() {
   const pages = await fetchPages();
+  const results = (pages?.results || []) as any[];
 
-  if (pages.results.length === 0) {
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
-
-  const paths = pages.results.map((post: any) => ({
-    params: { slug: post.properties.Slug.rich_text[0].plain_text },
-  }));
+  const paths = results
+    .map((post: any) => plainText(post?.properties?.Slug?.rich_text))
+    .filter(Boolean)
+    .map((slug: string) => ({ params: { slug } }));
 
   return {
     paths,
@@ -40,7 +39,14 @@ export async function getStaticProps({ params }: any) {
   const slug = params?.slug;
 
   const page: any = await fetchBySlug(slug);
-  const pageBlocks: any = await fetchPageBlocks(page?.id);
+  if (!page?.id) {
+    return { notFound: true, revalidate: 60 };
+  }
+
+  const pageBlocks: any = await fetchPageBlocks(page.id);
+  if (!pageBlocks || !Array.isArray(pageBlocks)) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   const renderer = new NotionRenderer({
     client: notion,
@@ -60,7 +66,12 @@ export async function getStaticProps({ params }: any) {
 
   // Simple prev/next navigation (Live posts only)
   const all = await fetchPages();
-  const posts = (all?.results || []) as any[];
+  const posts = ((all?.results || []) as any[]).filter((p) => {
+    const s = plainText(p?.properties?.Slug?.rich_text);
+    const t = plainText(p?.properties?.Title?.title);
+    return Boolean(s && t);
+  });
+
   const sorted = posts
     .slice()
     .sort((a, b) =>
@@ -70,9 +81,7 @@ export async function getStaticProps({ params }: any) {
     );
 
   const idx = sorted.findIndex(
-    (p) =>
-      p?.properties?.Slug?.rich_text?.[0]?.plain_text &&
-      p.properties.Slug.rich_text[0].plain_text === slug
+    (p) => plainText(p?.properties?.Slug?.rich_text) === slug
   );
 
   const prev = idx >= 0 ? sorted[idx + 1] : null; // older
@@ -80,8 +89,8 @@ export async function getStaticProps({ params }: any) {
 
   const toNav = (p: any) => {
     if (!p) return null;
-    const s = p?.properties?.Slug?.rich_text?.[0]?.plain_text;
-    const t = p?.properties?.Title?.title?.[0]?.plain_text;
+    const s = plainText(p?.properties?.Slug?.rich_text);
+    const t = plainText(p?.properties?.Title?.title);
     if (!s || !t) return null;
     return { slug: s, title: t };
   };
