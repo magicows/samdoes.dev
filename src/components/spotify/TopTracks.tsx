@@ -15,7 +15,10 @@ interface TrackData {
 interface ApiResponse {
   currentlyPlaying: TrackData | null;
   top10: TrackData[] | null;
+  range?: "short_term" | "medium_term" | "long_term";
 }
+
+type Range = "short_term" | "medium_term" | "long_term";
 
 const TopTracks = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<TrackData | null>(
@@ -25,31 +28,59 @@ const TopTracks = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showMore, setShowMore] = useState(false);
+  const [range, setRange] = useState<Range>("short_term");
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
 
-  useEffect(() => {
-    const fetchCurrentlyPlaying = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/spotify");
-        const data: ApiResponse = await response.json();
+  const fetchSpotify = async (opts?: { showSpinner?: boolean; signal?: AbortSignal }) => {
+    const showSpinner = opts?.showSpinner ?? false;
 
-        if (response.ok) {
-          setCurrentlyPlaying(data.currentlyPlaying);
-          setTop10(data.top10);
-        } else {
-          setError("Error fetching currently playing track");
-        }
-      } catch (err) {
-        setError("Failed to fetch currently playing track");
-      } finally {
-        // setTimeout(() => setLoading(false), 2000);
-        setLoading(false);
+    try {
+      if (showSpinner) setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/spotify?range=${range}`, { signal: opts?.signal });
+      const data: ApiResponse = await response.json();
+
+      if (response.ok) {
+        setCurrentlyPlaying(data.currentlyPlaying);
+        setTop10(data.top10);
+      } else {
+        setError("Error fetching Spotify data");
+      }
+    } catch (err: any) {
+      if (err?.name === "AbortError") return;
+      setError("Failed to fetch Spotify data");
+    } finally {
+      if (showSpinner) setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+
+    // initial load
+    fetchSpotify({ showSpinner: true, signal: ctrl.signal });
+
+    // poll every ~30s to keep "now playing" fresh without manual refresh
+    const interval = setInterval(() => {
+      fetchSpotify({ showSpinner: false, signal: ctrl.signal });
+    }, 30_000);
+
+    // also refresh when tab becomes active again
+    const onVis = () => {
+      if (document.visibilityState === "visible") {
+        fetchSpotify({ showSpinner: false, signal: ctrl.signal });
       }
     };
+    document.addEventListener("visibilitychange", onVis);
 
-    fetchCurrentlyPlaying();
-  }, []);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVis);
+      ctrl.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [range]);
 
   const NowPlaying = () => {
     const [showInfo, setShowInfo] = useState(true);
@@ -61,7 +92,7 @@ const TopTracks = () => {
             <h4 className="hidden md:flex items-center mb-6">
               <PiHeadphonesFill className="text-burn text-2xl" />
               <span className="font-bold ml-2 flex flex-row items-center">
-                Top 10 on <SiSpotify className="ml-2" />
+                Top tracks <SiSpotify className="ml-2" />
               </span>
             </h4>
 
@@ -147,12 +178,45 @@ const TopTracks = () => {
         )}
 
         <div className="flex flex-1 flex-col w-full order-1 md:order-2">
-          <h4 className="flex md:hidden items-center mb-6">
-            <PiHeadphonesFill className="text-burn text-2xl" />
-            <span className="font-bold ml-2 flex flex-row items-center">
-              Top 10 on <SiSpotify className="ml-2" />
-            </span>
-          </h4>
+          <div className="flex items-start md:items-center justify-between gap-4 mb-6 flex-col md:flex-row">
+            <h4 className="flex md:hidden items-center">
+              <PiHeadphonesFill className="text-burn text-2xl" />
+              <span className="font-bold ml-2 flex flex-row items-center">
+                Top tracks <SiSpotify className="ml-2" />
+              </span>
+            </h4>
+
+            <div className="w-full md:w-auto flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Range</span>
+              <div className="flex rounded-lg border border-zinc-700 overflow-hidden">
+                <button
+                  className={`px-3 py-1 text-[10px] font-bold ${range === "short_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
+                  onClick={() => setRange("short_term")}
+                >
+                  4w
+                </button>
+                <button
+                  className={`px-3 py-1 text-[10px] font-bold ${range === "medium_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
+                  onClick={() => setRange("medium_term")}
+                >
+                  6m
+                </button>
+                <button
+                  className={`px-3 py-1 text-[10px] font-bold ${range === "long_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
+                  onClick={() => setRange("long_term")}
+                >
+                  All
+                </button>
+              </div>
+              <button
+                className="ml-auto md:ml-0 text-[10px] font-bold text-zinc-400 hover:text-burnLight underline"
+                onClick={() => fetchSpotify({ showSpinner: false })}
+                title="Refresh now"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-5 md:grid-flow-col gap-x-2 gap-y-2 flex-1">
             {/* Display only 3 items when showMore is false, or all items when true */}
             {top10

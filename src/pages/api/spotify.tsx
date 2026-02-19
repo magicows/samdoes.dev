@@ -71,11 +71,13 @@ async function getCurrentlyPlayingTrack(): Promise<TrackData | null> {
     }
 }
 
-async function getTopTracks(): Promise<TrackData[] | null> {
+type TimeRange = 'short_term' | 'medium_term' | 'long_term';
+
+async function getTopTracks(timeRange: TimeRange = 'short_term'): Promise<TrackData[] | null> {
     await refreshAccessTokenIfNeeded();
     
     try {
-        const data = await spotifyApi.getMyTopTracks({ time_range: 'short_term', limit: 10 });
+        const data = await spotifyApi.getMyTopTracks({ time_range: timeRange, limit: 10 });
         return data.body.items.map((track: SpotifyApi.TrackObjectFull): TrackData => ({
             track: track.name,
             album: track.album.name,
@@ -91,9 +93,17 @@ async function getTopTracks(): Promise<TrackData[] | null> {
 // Next.js API handler
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+        // Avoid caching so the widget updates quickly.
+        res.setHeader('Cache-Control', 'no-store, max-age=0');
+
+        const rangeRaw = Array.isArray(req.query.range) ? req.query.range[0] : req.query.range;
+        const range = (rangeRaw === 'short_term' || rangeRaw === 'medium_term' || rangeRaw === 'long_term')
+            ? rangeRaw
+            : 'short_term';
+
         const currentlyPlaying = await getCurrentlyPlayingTrack();
-        const top10 = await getTopTracks();
-        res.status(200).json({ currentlyPlaying, top10 });
+        const top10 = await getTopTracks(range);
+        res.status(200).json({ currentlyPlaying, top10, range });
     } catch (error) {
         console.error('Error handling request', error);
         res.status(500).json({ error: 'Internal Server Error' });
