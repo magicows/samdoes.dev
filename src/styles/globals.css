@@ -215,3 +215,50 @@ html {
 .notion-toggle > blockquote {
   @apply my-6;
 }
+
+/* Notion bookmark */
+.notion-bookmark {
+  @apply no-underline my-10 grid grid-cols-1 md:grid-cols-[1fr_320px] overflow-hidden rounded-2xl border border-zinc-800/70 bg-zinc-900/30 shadow-2xl;
+}
+
+.notion-bookmark:hover {
+  @apply border-burn/40;
+}
+
+.notion-bookmark .bookmark-info {
+  @apply p-6 md:p-8;
+}
+
+.notion-bookmark .bookmark-title {
+  @apply text-zinc-100 font-black tracking-tight text-xl md:text-2xl;
+}
+
+.notion-bookmark .bookmark-description {
+  @apply text-zinc-300/90 mt-3 leading-relaxed;
+}
+
+.notion-bookmark .bookmark-footer {
+  @apply mt-5 flex items-center gap-3 text-xs text-zinc-400;
+}
+
+.notion-bookmark .bookmark-logo {
+  @apply h-4 w-4 rounded-sm;
+}
+
+.notion-bookmark .bookmark-url {
+  @apply truncate;
+}
+
+.notion-bookmark .bookmark-thumbnail {
+  @apply border-t md:border-t-0 md:border-l border-zinc-800/70 bg-zinc-950/20;
+}
+
+.notion-bookmark .bookmark-thumbnail img {
+  @apply w-full h-full object-cover;
+}
+
+@media (min-width: 768px) {
+  .notion-bookmark .bookmark-thumbnail {
+    max-height: 220px;
+  }
+}

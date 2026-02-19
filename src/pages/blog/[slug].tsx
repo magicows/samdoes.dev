@@ -193,6 +193,12 @@ export default function BlogPost({ content, html, pageDetails }: Props) {
         <SideBar />
         <main>
           <Header />
+          <nav aria-label="Breadcrumb" className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pt-6">
+            <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-300 hover:text-burnLight transition-colors">
+              <span aria-hidden="true">←</span>
+              <span>All posts</span>
+            </Link>
+          </nav>
           <Hero
             backgroundImageUrl={getPostOgImage(pageDetails) || "/og-default.jpg"}
             title={getPostTitle(pageDetails)}
