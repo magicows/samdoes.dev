@@ -277,18 +277,18 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
               </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-10 rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
               <Reveal width="w-fit">
                 <Link href="/blog" className="no-underline">
                   <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
                     <CiCircleMore />
-                    <span>View more posts.</span>
+                    <span>View all posts</span>
                   </div>
                 </Link>
               </Reveal>
             </div>
           </div>
-          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto bg-zinc-800 px-8 py-12 rounded-xl flex flex-col items-center justify-center mb-24">
+          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto border border-zinc-800/70 bg-zinc-900/30 px-8 py-12 rounded-2xl flex flex-col items-center justify-center mb-24 shadow-2xl">
             <Reveal width="w-full">
               <>
                 <h3 className="text-xl md:text-3xl text-center text-white font-black mb-2 mt-0">
@@ -304,12 +304,17 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
               </>
             </Reveal>
             <Reveal width="w-full">
-              <Link href="mailto:hello@samdoes.dev" className="no-underline">
-                <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
-                  <AiFillMail />
-                  <span>hello@samdoes.dev</span>
-                </div>
-              </Link>
+              <>
+                <Link href="mailto:hello@samdoes.dev" className="no-underline">
+                  <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                    <AiFillMail />
+                    <span>hello@samdoes.dev</span>
+                  </div>
+                </Link>
+                <p className="text-center text-zinc-500 text-sm mt-4 mb-0">
+                  You can also DM me on LinkedIn/X (icons in the header).
+                </p>
+              </>
             </Reveal>
           </div>
         </main>
