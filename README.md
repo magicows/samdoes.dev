@@ -58,6 +58,12 @@ Inside of the `/src/components/` directory you'll find all of the components bei
 
 As noted, styling is done using [Tailwind CSS](https://tailwindcss.com/).
 
+---
+
+## Preview deployment test
+
+This line exists to verify Vercel preview deployments work for public repo branches.
+
 Open up the `tailwind.config.js/ts` file to add to your configuration. For this project, we've left this as an empty template.
 
 The color palette for this project is made up of the tailwind `indigo` palette for primary colors, the `zinc` palette for neutral colors, and a few blacks/whites/other utility colors here and there. If you'd like to update these palettes, you could do a find and replace throughout the repository, for instance changing all instances of `indigo` to `red`.
