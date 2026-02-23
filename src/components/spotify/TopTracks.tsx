@@ -23,12 +23,14 @@ const TopTracks = () => {
   const [showMore, setShowMore] = useState(false);
   const [range, setRange] = useState<Range>("short_term");
   const isMediumScreen = useMediaQuery("(min-width: 768px)");
-  
-  const initialLoadRef = useRef(false);
 
-  const fetchNowPlaying = useCallback(async (signal?: AbortSignal) => {
+  // Use refs to track inflight requests to avoid race conditions
+  const nowPlayingAbortRef = useRef<AbortController | null>(null);
+  const topTracksAbortRef = useRef<AbortController | null>(null);
+
+  const fetchNowPlaying = useCallback(async (opts?: { signal?: AbortSignal }) => {
     try {
-      const response = await fetch(`/api/spotify/now-playing`, { signal });
+      const response = await fetch(`/api/spotify?type=now-playing`, { signal: opts?.signal });
       const data = await response.json();
       if (response.ok) {
         setCurrentlyPlaying(data.currentlyPlaying);
@@ -39,17 +41,17 @@ const TopTracks = () => {
     }
   }, []);
 
-  const fetchTopTracks = useCallback(async (targetRange: Range, showSpinner: boolean = false, signal?: AbortSignal) => {
+  const fetchTopTracks = useCallback(async (opts?: { range: Range; showSpinner?: boolean; signal?: AbortSignal }) => {
+    const showSpinner = opts?.showSpinner ?? false;
     try {
-      if (showSpinner) setLoading(true);
-      else setIsTopTracksUpdating(true);
-      
-      const response = await fetch(`/api/spotify/top-tracks?range=${targetRange}`, { signal });
+      if (showSpinner) setIsTopTracksUpdating(true);
+      setError(null);
+
+      const response = await fetch(`/api/spotify?type=top-tracks&range=${opts?.range}`, { signal: opts?.signal });
       const data = await response.json();
 
       if (response.ok) {
         setTop10(data.top10);
-        setError(null);
       } else {
         setError("Error fetching top tracks");
       }
@@ -57,49 +59,44 @@ const TopTracks = () => {
       if (err?.name === "AbortError") return;
       setError("Failed to fetch top tracks");
     } finally {
-      setLoading(false);
-      setIsTopTracksUpdating(false);
+      if (showSpinner) setIsTopTracksUpdating(false);
     }
   }, []);
 
-  // Handle initial load
+  // Initial load: Fetch both
   useEffect(() => {
-    if (initialLoadRef.current) return;
-    initialLoadRef.current = true;
-    
-    const ctrl = new AbortController();
-    
-    // Fetch both on start
-    Promise.all([
-      fetchNowPlaying(ctrl.signal),
-      fetchTopTracks(range, true, ctrl.signal)
-    ]);
+    const init = async () => {
+      setLoading(true);
+      await Promise.all([
+        fetchNowPlaying(),
+        fetchTopTracks({ range, showSpinner: false })
+      ]);
+      setLoading(false);
+    };
+    init();
+  }, [fetchNowPlaying, fetchTopTracks]);
 
-    return () => ctrl.abort();
-  }, [fetchNowPlaying, fetchTopTracks, range]);
-
-  // Handle range changes independently
+  // Range change: Fetch only top tracks
   useEffect(() => {
-    // Skip if it's the very first load (handled by initial effect)
-    if (loading && !isTopTracksUpdating) return;
+    if (loading) return; // Skip if initial load is still happening
     
-    const ctrl = new AbortController();
-    fetchTopTracks(range, false, ctrl.signal);
+    if (topTracksAbortRef.current) topTracksAbortRef.current.abort();
+    topTracksAbortRef.current = new AbortController();
     
-    return () => ctrl.abort();
+    fetchTopTracks({ range, showSpinner: true, signal: topTracksAbortRef.current.signal });
+
+    return () => topTracksAbortRef.current?.abort();
   }, [range, fetchTopTracks]);
 
-  // Handle Now Playing polling
+  // Polling: Fetch only now-playing every 30s
   useEffect(() => {
-    const ctrl = new AbortController();
-    
     const interval = setInterval(() => {
-      fetchNowPlaying(ctrl.signal);
+      fetchNowPlaying();
     }, 30_000);
 
     const onVis = () => {
       if (document.visibilityState === "visible") {
-        fetchNowPlaying(ctrl.signal);
+        fetchNowPlaying();
       }
     };
     document.addEventListener("visibilitychange", onVis);
@@ -107,7 +104,6 @@ const TopTracks = () => {
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVis);
-      ctrl.abort();
     };
   }, [fetchNowPlaying]);
 
@@ -126,76 +122,41 @@ const TopTracks = () => {
             </h4>
 
             <Reveal width="w-full">
-              <div
-                className={`min-w-[full] max-w-[300px] w-full min-h-[full] mx-auto relative mb-[6px] flex justify-center`}
-              >
-                {/* Largest circle (Black) */}
+              <div className={`min-w-[full] max-w-[300px] w-full min-h-[full] mx-auto relative mb-[6px] flex justify-center`}>
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[calc(90%+2px)] aspect-square bg-black rounded-full"></div>
-
                 {currentlyPlaying ? (
                   <img
                     src={currentlyPlaying.albumArt}
                     alt="Track Album art"
                     className="rounded-full w-[90%] animate-rotate cursor-pointer z-[1]"
                     onClick={() => setShowInfo(!showInfo)}
-                    style={{
-                      animationDelay: "2.6s",
-                    }}
+                    style={{ animationDelay: "2.6s" }}
                   />
                 ) : (
                   <img
-                    src={
-                      "https://img.freepik.com/premium-vector/abstract-background-small-squares-pixels-black-gray-colors_444390-9763.jpg"
-                    }
+                    src="https://img.freepik.com/premium-vector/abstract-background-small-squares-pixels-black-gray-colors_444390-9763.jpg"
                     alt="Static Noise"
                     className="rounded-full w-[90%] z-[1]"
                   />
                 )}
-
-                {/* Middle circle (White) */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[25%] aspect-square bg-white rounded-full z-[2]"></div>
-
-                {/* Smallest circle (Center hole) */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[2%] aspect-square bg-black rounded-full z-[3]"></div>
-
                 {showInfo && (
-                  <div
-                    className={`flex flex-col justify-between absolute top-1/2 left-1/2 -translate-x-1/2 w-full min-h-[53%] box-border  ${
-                      currentlyPlaying ? "bg-zinc-700" : "bg-burnDark"
-                    } rounded p-2 z-20`}
-                  >
+                  <div className={`flex flex-col justify-between absolute top-1/2 left-1/2 -translate-x-1/2 w-full min-h-[53%] box-border ${currentlyPlaying ? "bg-zinc-700" : "bg-burnDark"} rounded p-2 z-20`}>
                     <div className="flex flex-row items-center justify-between self-start text-sm font-black w-full ">
-                      <span className="font-black text-burnLight">
-                        Listening now:
-                      </span>
+                      <span className="font-black text-burnLight">Listening now:</span>
                     </div>
-                    <div
-                      className={`absolute right-[8px] bottom-[73px] max-w-[100px] rotate-[50deg] ${
-                        currentlyPlaying && "animate-rotateonefour delay-300"
-                      }`}
-                      style={{
-                        transformOrigin: "81% 80%",
-                        animationDelay: "0.4s",
-                      }}
-                    >
-                      <img src={"/record-arm.png"} alt="A graphic depicting a tone arm of a turntable." />
+                    <div className={`absolute right-[8px] bottom-[73px] max-w-[100px] rotate-[50deg] ${currentlyPlaying && "animate-rotateonefour delay-300"}`} style={{ transformOrigin: "81% 80%", animationDelay: "0.4s" }}>
+                      <img src="/record-arm.png" alt="A graphic depicting a tone arm of a turntable." />
                     </div>
                     {currentlyPlaying ? (
                       <div className="flex flex-col">
-                        <p className="text-normal font-semibold line-clamp-1">
-                          {currentlyPlaying.track}
-                        </p>
-                        <p className="text-[14px] font-normal line-clamp-1">
-                          {currentlyPlaying.artists.join(", ")}
-                        </p>
-                        <p className="text-[10px] font-light line-clamp-1">
-                          {currentlyPlaying.album}
-                        </p>
+                        <p className="text-normal font-semibold line-clamp-1">{currentlyPlaying.track}</p>
+                        <p className="text-[14px] font-normal line-clamp-1">{currentlyPlaying.artists.join(", ")}</p>
+                        <p className="text-[10px] font-light line-clamp-1">{currentlyPlaying.album}</p>
                       </div>
                     ) : (
-                      <h4 className="text-base text-white font-black">
-                        OFF AIR.
-                      </h4>
+                      <h4 className="text-base text-white font-black">OFF AIR.</h4>
                     )}
                     <SiSpotify className="absolute bottom-[10px] right-[10px]" />
                   </div>
@@ -215,38 +176,23 @@ const TopTracks = () => {
             </h4>
 
             <div className="w-full md:w-auto flex items-center gap-2">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black flex items-center gap-2">
-                Range {isTopTracksUpdating && <span className="animate-pulse text-burn">...</span>}
-              </span>
+              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Range</span>
               <div className="flex rounded-lg border border-zinc-700 overflow-hidden">
-                <button
-                  className={`px-3 py-1 text-[10px] font-bold ${range === "short_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
-                  onClick={() => setRange("short_term")}
-                  disabled={isTopTracksUpdating}
-                >
-                  4w
-                </button>
-                <button
-                  className={`px-3 py-1 text-[10px] font-bold ${range === "medium_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
-                  onClick={() => setRange("medium_term")}
-                  disabled={isTopTracksUpdating}
-                >
-                  6m
-                </button>
-                <button
-                  className={`px-3 py-1 text-[10px] font-bold ${range === "long_term" ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300"}`}
-                  onClick={() => setRange("long_term")}
-                  disabled={isTopTracksUpdating}
-                >
-                  All
-                </button>
+                {["short_term", "medium_term", "long_term"].map((r) => (
+                  <button
+                    key={r}
+                    disabled={isTopTracksUpdating}
+                    className={`px-3 py-1 text-[10px] font-bold transition-colors ${range === r ? "bg-burn text-zinc-100" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"} ${isTopTracksUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
+                    onClick={() => setRange(r as Range)}
+                  >
+                    {r === "short_term" ? "4w" : r === "medium_term" ? "6m" : "All"}
+                  </button>
+                ))}
               </div>
+              {isTopTracksUpdating && <span className="text-[10px] text-zinc-500 animate-pulse font-bold uppercase">Updating...</span>}
               <button
                 className="ml-auto md:ml-0 text-[10px] font-bold text-zinc-400 hover:text-burnLight underline"
-                onClick={() => {
-                   fetchNowPlaying();
-                   fetchTopTracks(range);
-                }}
+                onClick={() => { fetchNowPlaying(); fetchTopTracks({ range, showSpinner: true }); }}
                 title="Refresh now"
               >
                 Refresh
@@ -256,46 +202,28 @@ const TopTracks = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-5 md:grid-flow-col gap-x-2 gap-y-2 flex-1">
             {top10
               ?.slice(0, showMore || isMediumScreen ? top10.length : 3)
-              .map((track: TrackData, index: number) => (
-                <div
-                  key={index}
-                  className={`bg-zinc-700 rounded flex flex-row items-center group justify-between pb-2 px-2 pt-2 cursor-pointer relative overflow-hidden hover:overflow-visible transition-opacity duration-300 ${isTopTracksUpdating ? 'opacity-50' : 'opacity-100'}`}
-                >
+              .map((track, index) => (
+                <div key={`${range}-${index}`} className="bg-zinc-700 rounded flex flex-row items-center group justify-between pb-2 px-2 pt-2 cursor-pointer relative overflow-hidden hover:overflow-visible">
                   <div className="flex flex-row items-center justify-between gap-2 w-full z-10">
                     <Reveal>
                       <div className="flex flex-row items-center gap-2">
-                        <span className="text-burnLight font-bold">
-                          {index + 1}.
-                        </span>
+                        <span className="text-burnLight font-bold">{index + 1}.</span>
                         <div className="flex flex-col">
-                          <p className="text-[10px] font-semibold line-clamp-1">
-                            {track.track}
-                          </p>
-                          <p className="text-[9px] font-normal line-clamp-1">
-                            {track.artists.join(", ")}
-                          </p>
+                          <p className="text-[10px] font-semibold line-clamp-1">{track.track}</p>
+                          <p className="text-[9px] font-normal line-clamp-1">{track.artists.join(", ")}</p>
                         </div>
                       </div>
                     </Reveal>
                   </div>
-
                   <div className="group-hover:block absolute left-2/3 rounded-full group-hover:rounded-none w-[35%] h-auto z-[1] group-hover:z-10">
-                    <img
-                      src={track.albumArt}
-                      alt="Track Album art"
-                      className="rounded-full group-hover:rounded-none w-full h-full z-0"
-                    />
+                    <img src={track.albumArt} alt="Track Album art" className="rounded-full group-hover:rounded-none w-full h-full z-0" />
                     <div className="absolute inset-0 bg-zinc-900 opacity-70 group-hover:opacity-0 rounded-full z-10"></div>
                   </div>
                 </div>
               ))}
           </div>
-
           {!showMore && (
-            <button
-              className="md:hidden text-burn mt-2 text-[10px] font-semibold underline"
-              onClick={() => setShowMore(true)}
-            >
+            <button className="md:hidden text-burn mt-2 text-[10px] font-semibold underline" onClick={() => setShowMore(true)}>
               Gimmie the rest...
             </button>
           )}
@@ -311,7 +239,7 @@ const TopTracks = () => {
           <ShuffleLoader />
         </div>
       ) : error ? (
-        <p className="text-burn text-center">{error}</p>
+        <p className="text-center text-red-500 font-bold p-4">{error}</p>
       ) : (
         <NowPlaying />
       )}
