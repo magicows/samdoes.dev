@@ -103,12 +103,14 @@ export const Blog = ({ post }: Props) => {
           </div>
           <div className="mt-6 border-l-4 border-black pl-4">
             <Reveal width="w-full">
-              <div className="flex items-center gap-2 w-full">
-                <h4 className="font-black text-xl text-white shrink-0 max-w-full leading-tight uppercase tracking-tight">
-                  {post.properties.Title.title[0].plain_text}
-                </h4>
-              </div>
-              <div className="w-full h-[4px] bg-burn my-2" />
+              <>
+                <div className="flex items-center gap-2 w-full">
+                  <h4 className="font-black text-xl text-white shrink-0 max-w-full leading-tight uppercase tracking-tight">
+                    {post.properties.Title.title[0].plain_text}
+                  </h4>
+                </div>
+                <div className="w-full h-[4px] bg-burn my-2" />
+              </>
             </Reveal>
             <Reveal width="w-full">
               <div className="flex flex-row justify-between items-center">

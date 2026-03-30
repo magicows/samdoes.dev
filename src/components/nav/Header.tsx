@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { SiCodepen, SiGithub, SiLinkedin, SiX, SiInstagram } from "react-icons/si";
+import { SiCodepen, SiGithub, SiX, SiInstagram } from "react-icons/si";
+import { FaLinkedinIn } from "react-icons/fa";
 import { OutlineButton } from "../buttons/OutlineButton";
 
 export const Header = () => {
@@ -22,7 +23,7 @@ export const MyLinks = () => (
       target="_blank"
       rel="nofollow"
     >
-      <SiLinkedin />
+      <FaLinkedinIn />
     </Link>
     <Link
       className="text-zinc-300 hover:text-burnLight transition-colors"

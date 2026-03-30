@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   AnimationProps,
-  DynamicAnimationOptions,
   motion,
   useAnimate,
 } from "framer-motion";
@@ -12,7 +11,7 @@ const BLOCK_SIZE = 32;
 const DURATION_IN_MS = 175;
 const DURATION_IN_SECS = DURATION_IN_MS * 0.001;
 
-const TRANSITION: DynamicAnimationOptions = {
+const TRANSITION = {
   ease: "easeInOut",
   duration: DURATION_IN_SECS,
 };
@@ -36,32 +35,30 @@ export const ShuffleLoader = () => {
   const shuffle = async () => {
     const [first, second] = pickTwoRandom();
 
-    const firstElement = document.querySelector(`[data-block-id="${first.id}"]`);
-    const secondElement = document.querySelector(`[data-block-id="${second.id}"]`);
+    const firstSelector = `[data-block-id="${first.id}"]`;
+    const secondSelector = `[data-block-id="${second.id}"]`;
 
-    if (firstElement && secondElement) {
-      // Animate the elements only if they exist
-      await animate(firstElement, { y: -BLOCK_SIZE }, TRANSITION);
-      await animate(secondElement, { y: BLOCK_SIZE }, TRANSITION);
+    // Animate the elements - using type assertion to work with framer-motion 11
+    await animate(firstSelector, { y: -BLOCK_SIZE } as any, TRANSITION as any);
+    await animate(secondSelector, { y: BLOCK_SIZE } as any, TRANSITION as any);
 
-      await delay(DURATION_IN_MS);
+    await delay(DURATION_IN_MS);
 
-      setBlocks((pv) => {
-        const copy = [...pv];
-        const indexForFirst = copy.indexOf(first);
-        const indexForSecond = copy.indexOf(second);
-        copy[indexForFirst] = second;
-        copy[indexForSecond] = first;
-        return copy;
-      });
+    setBlocks((pv) => {
+      const copy = [...pv];
+      const indexForFirst = copy.indexOf(first);
+      const indexForSecond = copy.indexOf(second);
+      copy[indexForFirst] = second;
+      copy[indexForSecond] = first;
+      return copy;
+    });
 
-      await delay(DURATION_IN_MS * 2);
+    await delay(DURATION_IN_MS * 2);
 
-      await animate(firstElement, { y: 0 }, TRANSITION);
-      await animate(secondElement, { y: 0 }, TRANSITION);
+    await animate(firstSelector, { y: 0 } as any, TRANSITION as any);
+    await animate(secondSelector, { y: 0 } as any, TRANSITION as any);
 
-      await delay(DURATION_IN_MS);
-    }
+    await delay(DURATION_IN_MS);
   };
 
   const pickTwoRandom = () => {
