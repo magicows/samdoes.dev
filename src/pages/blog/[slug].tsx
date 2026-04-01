@@ -5,6 +5,7 @@ import {
   fetchPages,
   fetchPageBlocks,
   notion,
+  sortPostsByPublishedDate,
 } from "@/components/notion/fetchPages";
 import bookmarkPlugin from "@notion-render/bookmark-plugin";
 import { NotionRenderer } from "@notion-render/client";
@@ -72,13 +73,7 @@ export async function getStaticProps({ params }: any) {
     return Boolean(s && t);
   });
 
-  const sorted = posts
-    .slice()
-    .sort((a, b) =>
-      String(b?.properties?.Date?.date?.start || "").localeCompare(
-        String(a?.properties?.Date?.date?.start || "")
-      )
-    );
+  const sorted = sortPostsByPublishedDate(posts);
 
   const idx = sorted.findIndex(
     (p) => plainText(p?.properties?.Slug?.rich_text) === slug

@@ -106,7 +106,7 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
             </span>
           </h4>
 
-          <div className="w-full md:w-auto flex items-center gap-2">
+          <div className="w-full md:w-auto flex items-center gap-2 md:ml-auto">
             <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Range</span>
             <div className="flex rounded-lg border border-zinc-700 overflow-hidden">
               {["short_term", "medium_term", "long_term"].map((r) => (
@@ -119,15 +119,7 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
                   {r === "short_term" ? "4w" : r === "medium_term" ? "6m" : "All"}
                 </button>
               ))}
-            </div>
-            {isTopTracksUpdating && <span className="text-[10px] text-zinc-500 animate-pulse font-bold uppercase">Updating...</span>}
-            <button
-              className="ml-auto md:ml-0 text-[10px] font-bold text-zinc-400 hover:text-burnLight underline"
-              onClick={() => { fetchNowPlaying(); fetchTopTracks({ range, showSpinner: true }); }}
-              title="Refresh now"
-            >
-              Refresh
-            </button>
+            </div>                        
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-5 md:grid-flow-col gap-x-2 gap-y-2 flex-1">

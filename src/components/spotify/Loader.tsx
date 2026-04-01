@@ -21,18 +21,22 @@ export const ShuffleLoader = () => {
     Array.from(Array(NUM_BLOCKS).keys()).map((n) => ({ id: n }))
   );
   const [scope, animate] = useAnimate();
+  const mountedRef = React.useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
     const intervalId = setInterval(() => {
       shuffle();
     }, DURATION_IN_MS * 4); // Control how often shuffle happens
 
     return () => {
+      mountedRef.current = false;
       clearInterval(intervalId); // Clean up on unmount
     };
   }, []);
 
   const shuffle = async () => {
+    if (!mountedRef.current) return;
     const [first, second] = pickTwoRandom();
 
     const firstSelector = `[data-block-id="${first.id}"]`;
@@ -43,6 +47,7 @@ export const ShuffleLoader = () => {
     await animate(secondSelector, { y: BLOCK_SIZE } as any, TRANSITION as any);
 
     await delay(DURATION_IN_MS);
+    if (!mountedRef.current) return;
 
     setBlocks((pv) => {
       const copy = [...pv];
@@ -54,6 +59,7 @@ export const ShuffleLoader = () => {
     });
 
     await delay(DURATION_IN_MS * 2);
+    if (!mountedRef.current) return;
 
     await animate(firstSelector, { y: 0 } as any, TRANSITION as any);
     await animate(secondSelector, { y: 0 } as any, TRANSITION as any);
