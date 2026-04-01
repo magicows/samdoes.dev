@@ -5,9 +5,11 @@ export const Experience = () => {
   return (
     <section className="section-wrapper" id="experience">
       <SectionHeader title="Experience" dir="l" />
-      {experience.map((item) => (
-        <ExperienceItem key={item.title} {...item} />
-      ))}
+      <div className="space-y-6">
+        {experience.map((item) => (
+          <ExperienceItem key={item.title} {...item} />
+        ))}
+      </div>
     </section>
   );
 };

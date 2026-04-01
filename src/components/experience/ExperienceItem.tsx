@@ -19,26 +19,27 @@ export const ExperienceItem = ({
   tech,
 }: Props) => {
   return (
-    <div className="mb-6 border-b pb-6 border-zinc-700">
-      <div className="flex items-center justify-between mb-2">
+    <div className="section-panel relative overflow-hidden px-5 py-5 md:px-6 md:py-6">
+      <div className="absolute right-4 top-4 h-5 w-5 border-[3px] border-black bg-[var(--accent-tertiary)] shadow-[3px_3px_0px_0px_#000]" />
+      <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <Reveal>
-          <span className="font-bold text-xl">{title}</span>
+          <span className="text-2xl font-black uppercase tracking-tight">{title}</span>
         </Reveal>
         <Reveal>
-          <span>{time}</span>
+          <span className="inline-block border-[3px] border-black bg-[var(--accent-secondary)] px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-black shadow-[4px_4px_0px_0px_#000]">{time}</span>
         </Reveal>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <Reveal>
-          <span className="text-burnLight font-bold">{position}</span>
+          <span className="text-lg font-black text-[var(--accent-primary)]">{position}</span>
         </Reveal>
         <Reveal>
-          <span>{location}</span>
+          <span className="text-sm font-bold uppercase tracking-[0.14em] text-zinc-400">{location}</span>
         </Reveal>
       </div>
       <Reveal>
-        <p className="mb-6 text-zinc-300 leading-relaxed">{description}</p>
+        <p className="mb-6 max-w-3xl border-l-[6px] border-zinc-700 pl-4 leading-relaxed text-zinc-300">{description}</p>
       </Reveal>
       <Reveal>
         <div className="flex flex-wrap gap-2">

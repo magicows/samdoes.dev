@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-base: #101114;
+  --bg-elevated: #181b22;
+  --bg-panel: #20242c;
+  --line: #0b0c0f;
+  --accent-primary: #ec5e32;
+  --accent-secondary: #37d6c8;
+  --accent-tertiary: #f6d64a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(236, 94, 50, 0.18), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(55, 214, 200, 0.16), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(246, 214, 74, 0.08), transparent 28%),
+    linear-gradient(180deg, #111319 0%, #0c0d11 100%);
+}
+
+::selection {
+  background: rgba(246, 214, 74, 0.9);
+  color: #0b0c0f;
+}
+
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -9,6 +36,36 @@
 
 .writing-vertical {
   writing-mode: vertical-lr;
+}
+
+.site-shell {
+  @apply relative overflow-hidden;
+}
+
+.site-shell::before {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 h-[420px] opacity-70;
+  background:
+    linear-gradient(90deg, transparent 0 4%, rgba(255,255,255,0.04) 4% 4.4%, transparent 4.4% 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 100%);
+  background-size: 112px 100%, 100% 112px;
+  mask-image: linear-gradient(180deg, black, transparent);
+}
+
+.section-panel {
+  @apply border-[3px] border-black bg-[var(--bg-panel)] shadow-[8px_8px_0px_0px_#000];
+}
+
+.section-panel-soft {
+  @apply border-[3px] border-black bg-[rgba(32,36,44,0.82)] shadow-[6px_6px_0px_0px_#000];
+}
+
+.section-kicker {
+  @apply inline-flex items-center gap-2 border-[3px] border-black bg-[var(--accent-tertiary)] px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-black shadow-[4px_4px_0px_0px_#000];
+}
+
+.accent-link {
+  @apply font-bold text-[var(--accent-secondary)] underline decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent-tertiary)];
 }
 
 .notion-callout{
@@ -175,10 +232,6 @@
 
 .hljs-attr {
   @apply text-indigo-400;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 .notion-text-href{

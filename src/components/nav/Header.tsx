@@ -6,8 +6,10 @@ import { OutlineButton } from "../buttons/OutlineButton";
 
 export const Header = () => {
   return (
-    <header className="h-[72px] px-4 flex items-center justify-between sticky top-0 z-20 bg-zinc-900/50 backdrop-blur-md">
-      <MyLinks />
+    <header className="sticky top-0 z-20 px-3 pt-3 md:px-6">
+      <div className="section-panel-soft flex h-[72px] items-center justify-between px-4 backdrop-blur-md">
+        <MyLinks />
+      </div>
       {/* <OutlineButton onClick={() => window.open("/fake_resume.pdf")}>
         My Resume
       </OutlineButton> */}
@@ -16,9 +18,9 @@ export const Header = () => {
 };
 
 export const MyLinks = () => (
-  <div className="flex items-center text-lg gap-4">
+  <div className="flex items-center gap-3 text-lg">
     <Link
-      className="text-zinc-300 hover:text-burnLight transition-colors"
+      className="flex h-10 w-10 items-center justify-center border-2 border-black bg-zinc-900 text-zinc-200 shadow-[3px_3px_0px_0px_#000] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-secondary)] hover:text-black"
       href="https://www.linkedin.com/in/samfitzpatrick1"
       target="_blank"
       rel="nofollow"
@@ -26,7 +28,7 @@ export const MyLinks = () => (
       <FaLinkedinIn />
     </Link>
     <Link
-      className="text-zinc-300 hover:text-burnLight transition-colors"
+      className="flex h-10 w-10 items-center justify-center border-2 border-black bg-zinc-900 text-zinc-200 shadow-[3px_3px_0px_0px_#000] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-primary)] hover:text-white"
       href="https://www.x.com/samfitzpatrick"
       target="_blank"
       rel="nofollow"
@@ -34,7 +36,7 @@ export const MyLinks = () => (
       <SiX />
     </Link>
     <Link
-      className="text-zinc-300 hover:text-burnLight transition-colors"
+      className="flex h-10 w-10 items-center justify-center border-2 border-black bg-zinc-900 text-zinc-200 shadow-[3px_3px_0px_0px_#000] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-tertiary)] hover:text-black"
       href="https://www.instagram.com/samfitzpatrick"
       target="_blank"
       rel="nofollow"
