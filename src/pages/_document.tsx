@@ -18,7 +18,7 @@ export default function Document() {
         <meta name="twitter:description" content="React, React Native, and Wordpress developer based in Leamington Spa, UK." />
         <meta name="twitter:image" content="https://samdoes.dev/thumbnail.jpg" />
       </Head>
-      <body id="root" className="bg-zinc-900 text-zinc-50">
+      <body id="root" className="text-zinc-50 antialiased">
         <Main />
         <NextScript />
       </body>

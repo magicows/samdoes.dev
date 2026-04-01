@@ -11,7 +11,7 @@ export default function BlogCollation({posts}) {
   return (
     <section className="section-wrapper" id="blogs">
       <SectionHeader title="Recently" dir="l" />
-      <div className="grid gap-12 grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
         {posts.results.map((post, index) => {          
           return (
             <Blog key={post.id} post={post} />            
@@ -21,4 +21,3 @@ export default function BlogCollation({posts}) {
     </section>
   );
 };
-

@@ -89,7 +89,7 @@ export const Blog = ({ post }: Props) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             onClick={() => setIsOpen(true)}
-            className="w-full flex items-center aspect-video bg-zinc-800 border-4 border-black shadow-[6px_6px_0px_0px_#EC5E32] cursor-pointer relative overflow-hidden hover:translate-x-[2px] hover:-translate-y-[2px] transition-all duration-200"
+            className="relative flex aspect-video w-full items-center overflow-hidden border-4 border-black bg-zinc-800 shadow-[8px_8px_0px_0px_#37D6C8] transition-all duration-200 hover:-translate-y-[2px] hover:translate-x-[2px]"
           >
             <img
               src={image}
@@ -101,7 +101,7 @@ export const Blog = ({ post }: Props) => {
               className="w-full h-full object-cover transition-all duration-300"
             />
           </div>
-          <div className="mt-6 border-l-4 border-black pl-4">
+          <div className="mt-6 border-l-4 border-[var(--accent-secondary)] pl-4">
             <Reveal width="w-full">
               <>
                 <div className="flex items-center gap-2 w-full">
@@ -109,7 +109,7 @@ export const Blog = ({ post }: Props) => {
                     {post.properties.Title.title[0].plain_text}
                   </h4>
                 </div>
-                <div className="w-full h-[4px] bg-burn my-2" />
+                <div className="my-2 h-[4px] w-full bg-[var(--accent-primary)]" />
               </>
             </Reveal>
             <Reveal width="w-full">
@@ -119,16 +119,16 @@ export const Blog = ({ post }: Props) => {
             </Reveal>
             <Reveal width="w-full">
               <div className={"flex flex-row justify-between items-center"}>
-                <div className="flex flex-wrap gap-2 text-sm font-bold text-black bg-burn px-2 py-1 my-2 border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+                <div className="my-2 flex flex-wrap gap-2 border-2 border-black bg-[var(--accent-tertiary)] px-2 py-1 text-sm font-bold text-black shadow-[2px_2px_0px_0px_#000]">
                   {tags.join(" - ")}
                 </div>                
               </div>
             </Reveal>
             <Reveal>
-              <p className="text-zinc-200 font-medium leading-relaxed mt-2 border-l-2 border-burn pl-2">
+              <p className="mt-2 border-l-2 border-[var(--accent-primary)] pl-2 font-medium leading-relaxed text-zinc-200">
                 {summary}{" "}
                 <span
-                  className="inline-block text-sm font-black text-burn cursor-pointer underline decoration-4 underline-offset-4 decoration-black"
+                  className="inline-block cursor-pointer text-sm font-black text-[var(--accent-secondary)] underline decoration-4 decoration-black underline-offset-4"
                   onClick={() => setIsOpen(true)}
                 >
                   READ MORE {">"}
