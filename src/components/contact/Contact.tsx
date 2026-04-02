@@ -9,12 +9,14 @@ export const Contact = () => {
         <div className="absolute left-4 top-4 h-10 w-10 rotate-12 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[5px_5px_0px_0px_#000]" />
         <div className="absolute bottom-5 right-5 h-6 w-24 -rotate-6 border-[3px] border-black bg-[var(--accent-tertiary)] shadow-[5px_5px_0px_0px_#000]" />
         <Reveal width="w-full">
-          <div className="mx-auto mb-6 w-fit border-[3px] border-black bg-zinc-100 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-black shadow-[4px_4px_0px_0px_#000]">
-            Open to interesting work
-          </div>
-          <h4 className="text-center text-4xl font-black uppercase md:text-6xl">
-            Contact<span className="text-[var(--accent-primary)]">.</span>
-          </h4>
+          <>
+            <div className="mx-auto mb-6 w-fit border-[3px] border-black bg-zinc-100 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-black shadow-[4px_4px_0px_0px_#000]">
+              Open to interesting work
+            </div>
+            <h4 className="text-center text-4xl font-black uppercase md:text-6xl">
+              Contact<span className="text-[var(--accent-primary)]">.</span>
+            </h4>
+          </>
         </Reveal>
         <Reveal width="w-full">
           <p className="my-8 text-center leading-relaxed text-zinc-300">
