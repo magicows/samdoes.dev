@@ -83,7 +83,10 @@ export const ShuffleLoader = () => {
   };
 
   return (
-    <div ref={scope} className="flex divide-x divide-neutral-950">
+    <div
+      ref={scope}
+      className="flex border-[3px] border-black bg-zinc-950 shadow-[6px_6px_0px_0px_#000]"
+    >
       {blocks.map((b) => {
         return (
           <motion.div
@@ -95,7 +98,7 @@ export const ShuffleLoader = () => {
               width: BLOCK_SIZE,
               height: BLOCK_SIZE,
             }}
-            className="bg-burn"
+            className="border-r-[3px] border-black bg-[var(--accent-primary)] last:border-r-0 odd:bg-[var(--accent-secondary)]"
           />
         );
       })}
