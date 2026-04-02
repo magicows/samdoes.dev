@@ -52,6 +52,18 @@ body {
   mask-image: linear-gradient(180deg, black, transparent);
 }
 
+.site-shell::after {
+  content: "";
+  @apply absolute left-0 top-0 bottom-0 z-0 border-r-[3px] border-black bg-[rgba(13,14,18,0.95)] shadow-[8px_0px_0px_0px_#000];
+  width: 54px;
+}
+
+@media (min-width: 768px) {
+  .site-shell::after {
+    width: 76px;
+  }
+}
+
 .section-panel {
   @apply border-[3px] border-black bg-[var(--bg-panel)] shadow-[8px_8px_0px_0px_#000];
 }
