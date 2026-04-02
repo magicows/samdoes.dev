@@ -9,7 +9,7 @@ export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-export const sortPostsByPublishedDate = <T extends any>(posts: T[]): T[] => {
+export const sortPostsByPublishedDate = <T extends { properties?: { Date?: { date?: { start?: string } } } }>(posts: T[]): T[] => {
   return posts.slice().sort((a, b) =>
     String(b?.properties?.Date?.date?.start || "").localeCompare(
       String(a?.properties?.Date?.date?.start || "")
@@ -30,7 +30,7 @@ export const fetchPages = async () => {
 
   return {
     ...response,
-    results: sortPostsByPublishedDate(response.results),
+    results: sortPostsByPublishedDate(response.results.filter((result) => result.object === "page") as PageObjectResponse[]),
   };
 };
 

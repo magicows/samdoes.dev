@@ -26,7 +26,7 @@ export const SideBar = ({ posts = { results: [] } }) => {
         }
       });
 
-      const [nextSelected] = [...visibleSections.entries()].sort(
+      const [nextSelected] = Array.from(visibleSections.entries()).sort(
         (a, b) => b[1] - a[1]
       )[0] || [];
 
