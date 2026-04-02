@@ -9,22 +9,21 @@ export const About = () => {
   return (
     <section id="about" className="section-wrapper">
       <SectionHeader title="About" dir="l" />
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.3fr)_340px]">
-        <div className="section-panel relative overflow-hidden px-6 py-6 md:px-8 md:py-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.3fr)_340px] mb-12">
+        <div className="section-panel relative overflow-hidden px-6 pb-8 pt-12 md:px-8">
           <div className="absolute right-4 top-4 h-5 w-16 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[4px_4px_0px_0px_#000]" />
           <div className="space-y-5">
           <Reveal>
             <p className="leading-relaxed text-zinc-300">
-              <span className="mr-2 inline-block border-[3px] border-black bg-[var(--accent-primary)] px-3 py-2 align-top text-2xl font-black text-white shadow-[4px_4px_0px_0px_#000]">
+              <span className="float-left mr-3 mt-1 border-[3px] border-black bg-[var(--accent-primary)] px-3 py-1 text-5xl font-black leading-none text-white shadow-[4px_4px_0px_0px_#000]">
                 H
               </span>
-              ey! I&apos;m Sam Fitzpatrick, if you haven&apos;t already gathered that by
-              now. I build web and mobile applications across a few tech stacks. I specialise in frontend development, primarily React ⚛️ and Next.js, but I love building with whatever tools are right for the job 🛠️.
+              ey! I&apos;m Sam Fitzpatrick, I build web and mobile applications across a few tech stacks. I specialise in frontend development, primarily React ⚛️, React Native, and Next.js, but I love building with whatever tools are right for the job 🛠️.
             </p>
           </Reveal>
           <Reveal>
             <p className="leading-relaxed text-zinc-300">
-              I currently work as a Senior Developer with <a className="accent-link" href="https://freestyle.agency">Freestyle</a>, a marketing agency in Warwick, England 🇬🇧. Outside of my day-to-day, I also build, maintain, and host several websites for local businesses 🖥️.
+              I currently work as a Front-end Team Lead with <a className="accent-link" href="https://lab.co.uk">LAB</a>, where we harnesses behavioural science to create meaningful digital experiences. Outside of my day-to-day, I also build, maintain, and host several websites for local businesses 🖥️.
             </p>
           </Reveal>
           <Reveal>

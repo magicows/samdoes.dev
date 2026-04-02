@@ -18,9 +18,21 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(236, 94, 50, 0.18), transparent 28%),
-    radial-gradient(circle at 85% 12%, rgba(55, 214, 200, 0.16), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(246, 214, 74, 0.08), transparent 28%),
+    radial-gradient(
+      circle at top left,
+      rgba(236, 94, 50, 0.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 85% 12%,
+      rgba(55, 214, 200, 0.16),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(246, 214, 74, 0.08),
+      transparent 28%
+    ),
     linear-gradient(180deg, #111319 0%, #0c0d11 100%);
 }
 
@@ -39,16 +51,31 @@ body {
 }
 
 .site-shell {
-  @apply relative overflow-hidden;
+  @apply relative;
+}
+
+.site-shell main {
+  min-width: 0;
 }
 
 .site-shell::before {
   content: "";
   @apply pointer-events-none absolute inset-x-0 top-0 h-[420px] opacity-70;
   background:
-    linear-gradient(90deg, transparent 0 4%, rgba(255,255,255,0.04) 4% 4.4%, transparent 4.4% 100%),
-    linear-gradient(180deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 100%);
-  background-size: 112px 100%, 100% 112px;
+    linear-gradient(
+      90deg,
+      transparent 0 4%,
+      rgba(255, 255, 255, 0.04) 4% 4.4%,
+      transparent 4.4% 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03) 0 2px,
+      transparent 2px 100%
+    );
+  background-size:
+    112px 100%,
+    100% 112px;
   mask-image: linear-gradient(180deg, black, transparent);
 }
 
@@ -80,11 +107,11 @@ body {
   @apply font-bold text-[var(--accent-secondary)] underline decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent-tertiary)];
 }
 
-.notion-callout{
+.notion-callout {
   @apply flex flex-row items-start gap-4 rounded-xl border border-burn/20 bg-burn/5 p-5 mb-8 shadow-sm;
 }
 
-.notion-callout .icon{
+.notion-callout .icon {
   @apply mt-0.5 text-xl shrink-0 leading-none;
 }
 
@@ -104,16 +131,19 @@ body {
   @apply rounded-2xl border border-zinc-800 shadow-2xl transition-transform hover:scale-[1.01];
 }
 
-.notion-image legend{
+.notion-image legend {
   @apply text-zinc-500 text-sm italic mt-4 tracking-tight;
 }
 
-.notion-text-code{
+.notion-text-code {
   @apply text-burn px-[6px] py-[2px] rounded-md bg-zinc-800/80 border border-zinc-700/50 font-mono text-[0.9em] align-baseline;
 }
 
-.notion-code, .notion-code-block, .notion-text-code, .prose p{
- @apply text-base lg:text-lg;
+.notion-code,
+.notion-code-block,
+.notion-text-code,
+.prose p {
+  @apply text-base lg:text-lg;
 }
 
 /* Base styling for the code block container */
@@ -135,23 +165,30 @@ body {
   @apply font-mono text-[14px] md:text-[15px];
 }
 
-.hljs-keyword, .hljs-selector-tag {
+.hljs-keyword,
+.hljs-selector-tag {
   @apply text-pink-400 font-semibold;
 }
 
-.hljs-string, .hljs-doctag {
+.hljs-string,
+.hljs-doctag {
   @apply text-emerald-300;
 }
 
-.hljs-title, .hljs-section, .hljs-selector-id {
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
   @apply text-blue-300 font-bold;
 }
 
-.hljs-title.function_, .hljs-function {
+.hljs-title.function_,
+.hljs-function {
   @apply text-sky-300;
 }
 
-.hljs-number, .hljs-literal, .hljs-variable {
+.hljs-number,
+.hljs-literal,
+.hljs-variable {
   @apply text-orange-300;
 }
 
@@ -159,15 +196,18 @@ body {
   @apply text-zinc-500 italic;
 }
 
-.hljs-attr, .hljs-attribute {
+.hljs-attr,
+.hljs-attribute {
   @apply text-indigo-300;
 }
 
-.hljs-operator, .hljs-punctuation {
+.hljs-operator,
+.hljs-punctuation {
   @apply text-zinc-400;
 }
 
-.notion-bulleted_list_item, .prose ol li {
+.notion-bulleted_list_item,
+.prose ol li {
   @apply text-zinc-300 mb-3 pl-2;
 }
 
@@ -179,18 +219,28 @@ body {
   @apply list-disc list-outside ml-6 mb-8;
 }
 
-.prose p strong, .prose li strong {
+.prose p strong,
+.prose li strong {
   @apply text-white font-bold tracking-tight;
 }
 
 /* Notion-rendered typography extras */
-.prose h1, .prose h2, .prose h3, .prose h4 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
   @apply scroll-mt-24 font-black tracking-tighter text-white mt-16 mb-8;
 }
 
-.prose h1 { @apply text-5xl; }
-.prose h2 { @apply text-4xl border-b-2 border-zinc-800 pb-3; }
-.prose h3 { @apply text-2xl; }
+.prose h1 {
+  @apply text-5xl;
+}
+.prose h2 {
+  @apply text-4xl border-b-2 border-zinc-800 pb-3;
+}
+.prose h3 {
+  @apply text-2xl;
+}
 
 .prose p {
   @apply mb-8 leading-9 text-zinc-300/90;
@@ -246,12 +296,12 @@ body {
   @apply text-indigo-400;
 }
 
-.notion-text-href{
+.notion-text-href {
   /* Match the prose link styling so Notion-injected anchors feel consistent */
   @apply text-burn font-bold underline underline-offset-[6px] decoration-burn/20 hover:decoration-burn hover:bg-burn/5 rounded-sm px-0.5 -mx-0.5 transition-all;
 }
 
-.notion-text-href:hover{
+.notion-text-href:hover {
   @apply text-burnLighter;
 }
 
@@ -331,5 +381,11 @@ body {
 @media (min-width: 768px) {
   .notion-bookmark .bookmark-thumbnail {
     max-height: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  #about {
+    margin-top: 100px !important;
   }
 }

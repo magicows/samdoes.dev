@@ -1,14 +1,31 @@
+import { motion, useScroll, useTransform } from "framer-motion";
 import Reveal from "../util/Reveal";
-import DotGrid from "./DotGrid";
+import HeroCircuit from "./HeroCircuit";
 import { OutlineButton } from "../buttons/OutlineButton";
 
 const Hero = () => {
+  const { scrollY } = useScroll();
+  const topAccentY = useTransform(scrollY, [0, 500], [0, 24]);
+  const topAccentRotate = useTransform(scrollY, [0, 500], [0, 6]);
+  const bottomAccentY = useTransform(scrollY, [0, 500], [0, 32]);
+  const bottomAccentX = useTransform(scrollY, [0, 500], [0, -8]);
+
   return (
-    <section className="overflow-hidden py-16 text-slate-100 md:py-24">
+    <section className=" pt-20 text-slate-100 md:pt-24">
       <div className="section-panel relative overflow-hidden bg-[linear-gradient(135deg,rgba(236,94,50,0.18),transparent_40%),linear-gradient(315deg,rgba(55,214,200,0.12),transparent_35%),#161920] px-6 py-8 md:px-10 md:py-12">
-        <div className="absolute right-5 top-5 h-6 w-20 border-[3px] border-black bg-[var(--accent-tertiary)] shadow-[4px_4px_0px_0px_#000]" />
-        <div className="absolute bottom-5 left-5 h-4 w-4 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[3px_3px_0px_0px_#000]" />
-        <div className="pointer-events-none relative z-10 max-w-3xl">
+        <motion.div
+          className="absolute right-5 top-5 h-6 w-20 border-[3px] border-black bg-[var(--accent-secondary)] md:bg-[var(--accent-tertiary)] shadow-[4px_4px_0px_0px_#000]"
+          style={{ y: topAccentY, rotate: topAccentRotate }}
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-5 left-5 h-4 w-4 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[3px_3px_0px_0px_#000]"
+          style={{ y: bottomAccentY, x: bottomAccentX }}
+          animate={{ y: [0, 5, 0], scale: [1, 1.08, 1] }}
+          transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="pointer-events-none relative z-10 md:max-w-[min(54rem,58%)] md:pr-8">
           <Reveal>
             <span className="section-kicker mb-6">Developer / Builder / Tinkerer</span>
           </Reveal>
@@ -21,33 +38,20 @@ const Hero = () => {
             <h2 className="pointer-events-auto my-4 max-w-2xl border-l-[6px] border-[var(--accent-secondary)] pl-4 text-xl text-zinc-200 md:my-6 md:text-4xl">
               I build sharp, useful software across{" "}
               <span className="font-semibold text-[var(--accent-tertiary)]">
-                web, mobile, and product experiments.
+                web and mobile.
               </span>
             </h2>
           </Reveal>
           <Reveal>
             <p className="pointer-events-auto max-w-2xl text-sm leading-relaxed text-zinc-300 md:text-base md:leading-relaxed">
-              Based in Royal Leamington Spa. I’ve spent the last 8+ years
+              Based in Royal Leamington Spa. I've spent the last 10+ years
               building and scaling software for teams across React, React
               Native, Node.js, and more.
               <br />
               <br />
-              If you’ve got a project in mind, let’s talk.
+              If you've got a project in mind, let's talk.
             </p>
-          </Reveal>
-          <Reveal>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <span className="border-[3px] border-black bg-zinc-100 px-3 py-2 text-xs font-black uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_#000]">
-                React + Next.js
-              </span>
-              <span className="border-[3px] border-black bg-[var(--accent-secondary)] px-3 py-2 text-xs font-black uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_#000]">
-                React Native + Expo
-              </span>
-              <span className="border-[3px] border-black bg-[var(--accent-primary)] px-3 py-2 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[4px_4px_0px_0px_#000]">
-                Product-minded shipping
-              </span>
-            </div>
-          </Reveal>
+          </Reveal>          
           <Reveal>
             <OutlineButton
               onClick={() => {
@@ -59,7 +63,7 @@ const Hero = () => {
             </OutlineButton>
           </Reveal>
         </div>
-        <DotGrid />
+        <HeroCircuit />
       </div>
     </section>
   );

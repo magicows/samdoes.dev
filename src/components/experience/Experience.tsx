@@ -16,12 +16,30 @@ export const Experience = () => {
 
 const experience = [
   {
+    title: "LAB",
+    position: "Front-end Team Lead",
+    time: "2026 - Present",
+    location: "Remote, UK",
+    description:
+      "I'm now a Frontend Team Lead and part of a wider team following our merger with LAB Group. While I still work across React, React Native, and Optimizely projects, the broader team predominantly uses Storyblok, Contentful, and Sitecore.", 
+    tech: [
+      "React Native",
+      "React",
+      "Netlify",
+      "Expo",
+      "Optimizely",
+      "Storyblok",
+      "Docker",
+      "Node.js",      
+    ],
+  },
+  {
     title: "Freestyle",
     position: "Senior Developer",
-    time: "2021 - Present",
+    time: "2021 - 2026",
     location: "Warwick, UK",
     description:
-      "These days, I find myself mainly building mobile experiences in React Native and Expo but still get to build some pretty cool bespoke web apps and components. I'm part of an ace team of developers that specialise in Optimizely so sometimes I throw my hat in that ring too when required.", 
+      "I mainly built mobile experiences in React Native and Expo, while still getting to work on some pretty cool bespoke web apps and components. I was part of an ace team of developers that specialised in Optimizely, so I occasionally threw my hat in that ring when required.", 
     tech: [
       "React Native",
       "React",

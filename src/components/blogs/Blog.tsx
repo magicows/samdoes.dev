@@ -113,22 +113,25 @@ export const Blog = ({ post }: Props) => {
               </>
             </Reveal>
             <Reveal width="w-full">
-              <div className="flex flex-row justify-between items-center">
-                 <CalendarIcon dateString={post.properties.Date.date.start} />
-              </div>
-            </Reveal>
-            <Reveal width="w-full">
-              <div className={"flex flex-row justify-between items-center"}>
-                <div className="my-2 flex flex-wrap gap-2 border-2 border-black bg-[var(--accent-tertiary)] px-2 py-1 text-sm font-bold text-black shadow-[2px_2px_0px_0px_#000]">
-                  {tags.join(" - ")}
-                </div>                
+              <div className="mb-4 mt-3 flex flex-wrap items-center gap-3">
+                <CalendarIcon dateString={post.properties.Date.date.start} />
+                <div className="flex min-w-0 flex-1 flex-wrap gap-2">
+                  {tags.map((tag: string) => (
+                    <span
+                      key={tag}
+                      className="border-2 border-black bg-[var(--accent-tertiary)] px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-black shadow-[2px_2px_0px_0px_#000]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </Reveal>
             <Reveal>
-              <p className="mt-2 border-l-2 border-[var(--accent-primary)] pl-2 font-medium leading-relaxed text-zinc-200">
-                {summary}{" "}
+              <p className="mt-2 border-l-2 border-[var(--accent-primary)] pl-3 font-medium leading-relaxed text-zinc-200">
+                {summary}
                 <span
-                  className="inline-block cursor-pointer text-sm font-black text-[var(--accent-secondary)] underline decoration-4 decoration-black underline-offset-4"
+                  className="mt-3 block cursor-pointer text-sm font-black text-[var(--accent-secondary)] underline decoration-4 decoration-black underline-offset-4"
                   onClick={() => setIsOpen(true)}
                 >
                   READ MORE {">"}

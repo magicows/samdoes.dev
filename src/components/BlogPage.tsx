@@ -15,7 +15,7 @@ export const BlogPage = ({posts = []} : any) => {
       <SideBar posts={posts} />
       <main className="relative">
         <Header />
-        <div className="relative mx-auto max-w-6xl px-4 md:px-8 space-y-32 pb-24">
+        <div className="relative mx-auto max-w-6xl px-4 md:px-8 space-y-32 pb-24 mt-16 md:mt-24">
           {posts.results.length >= 1 ? <BlogCollation posts={posts} /> : <></>}
         </div>
       </main>

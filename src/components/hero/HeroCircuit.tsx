@@ -1,0 +1,182 @@
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+
+const shapes = [
+  {
+    id: "panel-a",
+    width: 188,
+    height: 94,
+    baseX: 18,
+    baseY: 24,
+    fill: "var(--accent-secondary)",
+    text: "BUILD",
+    textColor: "#0b0c0f",
+    depth: 0.18,
+  },
+  {
+    id: "panel-b",
+    width: 132,
+    height: 132,
+    baseX: 274,
+    baseY: 54,
+    fill: "var(--accent-primary)",
+    text: "TINKER",
+    textColor: "#ffffff",
+    depth: 0.24,
+  },
+  {
+    id: "panel-c",
+    width: 176,
+    height: 76,
+    baseX: 162,
+    baseY: 230,
+    fill: "#f4f4f5",
+    text: "PLAY",
+    textColor: "#0b0c0f",
+    depth: 0.14,
+  },
+  {
+    id: "bar-a",
+    width: 82,
+    height: 34,
+    baseX: 320,
+    baseY: 198,
+    fill: "var(--accent-tertiary)",
+    text: "",
+    textColor: "#0b0c0f",
+    depth: 0.3,
+  },
+  {
+    id: "bar-b",
+    width: 58,
+    height: 58,
+    baseX: 336,
+    baseY: 278,
+    fill: "#1f242b",
+    text: "",
+    textColor: "#ffffff",
+    depth: 0.22,
+  },
+  {
+    id: "dot-a",
+    width: 26,
+    height: 26,
+    baseX: 390,
+    baseY: 28,
+    fill: "var(--accent-secondary)",
+    text: "",
+    textColor: "#0b0c0f",
+    depth: 0.32,
+  },
+];
+
+export default function HeroCircuit() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const [pulse, setPulse] = useState(0);
+
+  const { scrollY } = useScroll();
+  const floatY = useTransform(scrollY, [0, 600], [0, 36]);
+  const floatRotate = useTransform(scrollY, [0, 600], [0, 4]);
+
+  return (
+    <div className="pointer-events-none absolute right-8 top-1/2 hidden w-[28rem] -translate-y-1/2 items-center justify-center md:flex">
+      <div
+        ref={containerRef}
+        className="pointer-events-auto relative h-[360px] w-full"
+        onMouseMove={(event) => {
+          const rect = containerRef.current?.getBoundingClientRect();
+          if (!rect) return;
+
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+          setPointer({ x, y });
+        }}
+        onMouseLeave={() => setPointer({ x: 0, y: 0 })}
+        onClick={() => setPulse((value) => value + 1)}
+      >
+        <motion.div
+          className="absolute inset-0"
+          style={{ y: floatY, rotate: floatRotate }}
+        >
+          {shapes.map((shape, index) => {
+            const offsetX = pointer.x * 24 * shape.depth;
+            const offsetY = pointer.y * 18 * shape.depth;
+            const pulseScale = pulse % 2 === 0 ? 1 : 1.03 + shape.depth * 0.08;
+            const idleOffset = (index % 2 === 0 ? -1 : 1) * (8 + index * 1.5);
+
+            return (
+              <motion.div
+                key={shape.id}
+                className="absolute border-[3px] border-black shadow-[8px_8px_0px_0px_#000]"
+                style={{
+                  width: shape.width,
+                  height: shape.height,
+                  left: shape.baseX,
+                  top: shape.baseY,
+                  background: shape.fill,
+                }}
+                animate={{
+                  x: offsetX,
+                  y: [offsetY, offsetY + idleOffset, offsetY],
+                  scale: pulseScale,
+                  rotate: pulse % 2 === 0 ? [0, index % 2 === 0 ? 1.2 : -1.2, 0] : (index % 2 === 0 ? 1.8 : -1.8),
+                }}
+                transition={{
+                  x: { type: "spring", stiffness: 120, damping: 18 },
+                  y: { duration: 4.8 + index * 0.35, repeat: Infinity, ease: "easeInOut" },
+                  scale: { type: "spring", stiffness: 180, damping: 12 },
+                  rotate: pulse % 2 === 0
+                    ? { duration: 5.4 + index * 0.3, repeat: Infinity, ease: "easeInOut" }
+                    : { type: "spring", stiffness: 180, damping: 14 },
+                }}
+              >
+                {shape.text ? (
+                  <div
+                    className="flex h-full w-full items-center justify-center text-[24px] font-black uppercase tracking-[0.16em]"
+                    style={{ color: shape.textColor }}
+                  >
+                    {shape.text}
+                  </div>
+                ) : null}
+              </motion.div>
+            );
+          })}
+
+          <motion.div
+            className="absolute left-[132px] top-[116px] h-[120px] w-[120px] rounded-full border-[3px] border-black bg-zinc-950 shadow-[8px_8px_0px_0px_#000]"
+            animate={{
+              x: pointer.x * -10,
+              y: [pointer.y * -12, pointer.y * -12 - 10, pointer.y * -12],
+              scale: pulse % 2 === 0 ? 1 : 1.08,
+            }}
+            transition={{
+              x: { type: "spring", stiffness: 110, damping: 18 },
+              y: { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
+              scale: { type: "spring", stiffness: 170, damping: 12 },
+            }}
+          >
+            <motion.div
+              className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-black bg-[var(--accent-primary)]"
+              animate={{ scale: pulse % 2 === 0 ? 1 : 1.22 }}
+              transition={{ type: "spring", stiffness: 220, damping: 12 }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="absolute left-[354px] top-[250px] h-[16px] w-[50px] border-[3px] border-black bg-zinc-100 shadow-[6px_6px_0px_0px_#000]"
+            animate={{
+              x: pointer.x * 10,
+              y: [pointer.y * 6, pointer.y * 6 + 8, pointer.y * 6],
+            }}
+            transition={{
+              x: { type: "spring", stiffness: 140, damping: 18 },
+              y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+            }}
+          />
+        </motion.div>
+      </div>
+    </div>
+  );
+}
