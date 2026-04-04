@@ -5,6 +5,7 @@ import {
   fetchPages,
   fetchPageBlocks,
   notion,
+  sortPostsByPublishedDate,
 } from "@/components/notion/fetchPages";
 import bookmarkPlugin from "@notion-render/bookmark-plugin";
 import { NotionRenderer } from "@notion-render/client";
@@ -72,13 +73,7 @@ export async function getStaticProps({ params }: any) {
     return Boolean(s && t);
   });
 
-  const sorted = posts
-    .slice()
-    .sort((a, b) =>
-      String(b?.properties?.Date?.date?.start || "").localeCompare(
-        String(a?.properties?.Date?.date?.start || "")
-      )
-    );
+  const sorted = sortPostsByPublishedDate(posts);
 
   const idx = sorted.findIndex(
     (p) => plainText(p?.properties?.Slug?.rich_text) === slug
@@ -110,7 +105,7 @@ function Hero({ backgroundImageUrl, title, description, tags, date }: any) {
   return (
     <div className="relative py-10 md:h-[500px]">
       {/* Background Image */}
-      <div className="absolute inset-0 blur-[3px]">
+      <div className="absolute inset-0 overflow-hidden border-y-[3px] border-black blur-[3px]">
         <img
           src={backgroundImageUrl}
           alt="Background Image"
@@ -121,8 +116,13 @@ function Hero({ backgroundImageUrl, title, description, tags, date }: any) {
       </div>
 
       {/* Text Content */}
-      <div className="relative z-10 flex flex-col items-start justify-center h-full px-4 md:px-8 mx-auto max-w-5xl">
+      <div className="relative z-10 flex h-full max-w-6xl flex-col items-start justify-center px-4 md:mx-auto md:px-8">
         <div className="flex flex-col items-start justify-center">
+          <Reveal>
+            <div className="mb-4 inline-flex items-center gap-2 border-[3px] border-black bg-[var(--accent-tertiary)] px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-black shadow-[4px_4px_0px_0px_#000]">
+              Article
+            </div>
+          </Reveal>
           <Reveal>
             <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-2">
               <h1 className="flex flex-row pointer-events-auto text-3xl sm:text-6xl font-black text-zinc-100 md:text-7xl">
@@ -137,7 +137,7 @@ function Hero({ backgroundImageUrl, title, description, tags, date }: any) {
             </p>
           </Reveal>
           <Reveal>
-            <div className="flex flex-wrap gap-4 text-sm text-burnLight my-2">
+            <div className="my-3 flex flex-wrap gap-3 text-sm font-bold text-[var(--accent-secondary)]">
               {tags.join(" - ")}
             </div>
           </Reveal>
@@ -229,14 +229,14 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
           <meta name="twitter:image" content={getPostOgImage(pageDetails)} />
         ) : null}
       </Head>
-      <div className="grid grid-cols-[54px_1fr]">
+      <div className="site-shell grid min-h-screen grid-cols-[54px_1fr] md:grid-cols-[76px_1fr]">
         <SideBar />
-        <main>
+        <main className="relative">
           <Header />
-          <nav aria-label="Breadcrumb" className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pt-6">
+          <nav aria-label="Breadcrumb" className="max-w-[360px] px-4 pt-6 md:mx-auto md:max-w-6xl md:px-8">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-bold text-zinc-300 hover:text-burnLight transition-colors"
+              className="inline-flex items-center gap-2 border-[3px] border-black bg-zinc-100 px-3 py-2 text-sm font-black uppercase tracking-[0.16em] text-black shadow-[4px_4px_0px_0px_#000] transition-all hover:-translate-y-0.5 hover:translate-x-0.5 hover:bg-[var(--accent-tertiary)]"
             >
               <span aria-hidden="true">←</span>
               <span>All posts</span>
@@ -249,20 +249,20 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
             date={date}
             tags={tags}
           />
-          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 space-y-32 pb-12 w-full">
+          <div className="max-w-[360px] w-full px-4 pb-12 md:mx-auto md:max-w-6xl md:px-8">
             <div
-              className="text-xl mt-10 mx-auto leading-10 prose max-w-none md:text-justify prose-p:text-white prose-headings:text-white prose-blockquote:text-white"
+              className="section-panel prose mx-auto mt-10 max-w-none px-6 py-8 text-xl leading-10 prose-p:text-white prose-headings:text-white prose-blockquote:text-white md:px-10 md:py-10 md:text-justify"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
-          <div className="md:mx-auto max-w-[360px] md:max-w-5xl px-4 md:px-8 pb-12 w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
-                <div className="text-xs uppercase tracking-widest text-zinc-500 font-black">Previous</div>
+          <div className="max-w-[360px] w-full px-4 pb-12 md:mx-auto md:max-w-6xl md:px-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="section-panel-soft p-6">
+                <div className="text-xs font-black uppercase tracking-widest text-[var(--accent-secondary)]">Previous</div>
                 {prevPost ? (
                   <Link
                     href={`/blog/${prevPost.slug}`}
-                    className="mt-2 block text-zinc-100 font-black tracking-tight hover:text-burnLight transition-colors"
+                    className="mt-2 block text-zinc-100 font-black tracking-tight transition-colors hover:text-[var(--accent-tertiary)]"
                   >
                     {prevPost.title}
                   </Link>
@@ -270,12 +270,12 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
                   <div className="mt-2 text-zinc-500">No older post</div>
                 )}
               </div>
-              <div className="rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
-                <div className="text-xs uppercase tracking-widest text-zinc-500 font-black">Next</div>
+              <div className="section-panel-soft p-6">
+                <div className="text-xs font-black uppercase tracking-widest text-[var(--accent-primary)]">Next</div>
                 {nextPost ? (
                   <Link
                     href={`/blog/${nextPost.slug}`}
-                    className="mt-2 block text-zinc-100 font-black tracking-tight hover:text-burnLight transition-colors"
+                    className="mt-2 block text-zinc-100 font-black tracking-tight transition-colors hover:text-[var(--accent-secondary)]"
                   >
                     {nextPost.title}
                   </Link>
@@ -285,10 +285,10 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
               </div>
             </div>
 
-            <div className="mt-10 rounded-2xl border border-zinc-800/70 bg-zinc-900/30 p-6">
+            <div className="section-panel-soft mt-10 p-6">
               <Reveal width="w-fit">
                 <Link href="/blog" className="no-underline">
-                  <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                  <div className="mx-auto flex w-fit items-center justify-center gap-2 border-[3px] border-black bg-[var(--accent-tertiary)] px-5 py-3 text-lg font-black uppercase tracking-[0.16em] text-black shadow-[6px_6px_0px_0px_#000] transition-all hover:-translate-y-1 hover:translate-x-1 md:text-xl">
                     <CiCircleMore />
                     <span>View all posts</span>
                   </div>
@@ -296,11 +296,11 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
               </Reveal>
             </div>
           </div>
-          <div className="md:mx-auto max-w-[360px] prose md:max-w-xl mx-auto border border-zinc-800/70 bg-zinc-900/30 px-8 py-12 rounded-2xl flex flex-col items-center justify-center mb-24 shadow-2xl">
+          <div className="section-panel mx-auto mb-24 flex max-w-[360px] flex-col items-center justify-center px-8 py-12 prose md:max-w-xl">
             <Reveal width="w-full">
               <>
                 <h3 className="text-xl md:text-3xl text-center text-white font-black mb-2 mt-0">
-                  Want to discuss this post<span className="text-burn">?</span>
+                  Want to discuss this post<span className="text-[var(--accent-primary)]">?</span>
                 </h3>
                 <p className="text-center text-zinc-300 leading-relaxed">
                   While I haven't enabled comments to keep things simple and
@@ -314,7 +314,7 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
             <Reveal width="w-full">
               <>
                 <Link href="mailto:hello@samdoes.dev" className="no-underline">
-                  <div className="flex items-center justify-center gap-2 w-fit text-lg md:text-2xl whitespace-normal mx-auto hover:text-burnLight transition-colors text-burn ">
+                  <div className="mx-auto flex w-fit items-center justify-center gap-3 border-[3px] border-black bg-[var(--accent-primary)] px-5 py-3 text-lg font-black text-white shadow-[6px_6px_0px_0px_#000] transition-all hover:-translate-y-1 hover:translate-x-1 hover:bg-[var(--accent-secondary)] hover:text-black md:text-2xl">
                     <AiFillMail />
                     <span>hello@samdoes.dev</span>
                   </div>

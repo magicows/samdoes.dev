@@ -11,11 +11,11 @@ import BlogCollation from "./blogs/BlogCollation";
 
 export const BlogPage = ({posts = []} : any) => {
   return (
-    <div className="grid grid-cols-[54px_1fr]">
+    <div className="site-shell grid min-h-screen grid-cols-[54px_1fr] md:grid-cols-[76px_1fr]">
       <SideBar posts={posts} />
-      <main>
+      <main className="relative">
         <Header />
-        <div className="mx-auto max-w-5xl px-4 md:px-8 space-y-32 pb-24">
+        <div className="relative mx-auto max-w-6xl px-4 md:px-8 space-y-32 pb-24 mt-16 md:mt-24">
           {posts.results.length >= 1 ? <BlogCollation posts={posts} /> : <></>}
         </div>
       </main>
