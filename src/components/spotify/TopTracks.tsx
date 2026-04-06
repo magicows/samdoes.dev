@@ -184,7 +184,7 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
                     </Reveal>
                   </div>
                   <motion.div
-                    className="absolute right-0 h-[calc(100%+6px)] w-[31%] -translate-y-1/2 z-[1] group-hover:z-10 group-hover:block group-hover:rounded-none"
+                    className="absolute top-[-3px] right-[-3px] bottom-[-3px] w-[31%] z-[1] group-hover:z-10 group-hover:block group-hover:rounded-none"
                     initial={{ x: 36, opacity: 0, scale: 0.94 }}
                     animate={{ x: 0, opacity: 1, scale: 1 }}
                     transition={{

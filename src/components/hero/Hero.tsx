@@ -14,17 +14,25 @@ const Hero = () => {
     <section className=" pt-20 text-slate-100 md:pt-24">
       <div className="section-panel relative overflow-hidden bg-[linear-gradient(135deg,rgba(236,94,50,0.18),transparent_40%),linear-gradient(315deg,rgba(55,214,200,0.12),transparent_35%),#161920] px-6 py-8 md:px-10 md:py-12">
         <motion.div
-          className="absolute right-5 top-5 h-6 w-20 border-[3px] border-black bg-[var(--accent-secondary)] md:bg-[var(--accent-tertiary)] shadow-[4px_4px_0px_0px_#000]"
+          className="absolute right-5 top-5"
           style={{ y: topAccentY, rotate: topAccentRotate }}
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
-        />
+        >
+          <motion.div
+            className="h-6 w-20 border-[3px] border-black bg-[var(--accent-secondary)] md:bg-[var(--accent-tertiary)] shadow-[4px_4px_0px_0px_#000]"
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
         <motion.div
-          className="absolute bottom-5 left-5 h-4 w-4 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[3px_3px_0px_0px_#000]"
+          className="absolute bottom-5 left-5"
           style={{ y: bottomAccentY, x: bottomAccentX }}
-          animate={{ y: [0, 5, 0], scale: [1, 1.08, 1] }}
-          transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
-        />
+        >
+          <motion.div
+            className="h-4 w-4 border-[3px] border-black bg-[var(--accent-secondary)] shadow-[3px_3px_0px_0px_#000]"
+            animate={{ y: [0, 5, 0], scale: [1, 1.08, 1] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
         <div className="pointer-events-none relative z-10 md:max-w-[min(54rem,58%)] md:pr-8">
           <Reveal>
             <span className="section-kicker mb-6">Developer / Builder / Tinkerer</span>
