@@ -35,10 +35,10 @@ export const SideBarLink = ({
       onClick={() => {
         setSelected(value);
       }}
-      className={`writing-vertical h-24 shrink-0 flex items-center justify-center border-r-2 text-sm transition-all w-full ${
+      className={`writing-vertical flex h-24 w-full shrink-0 items-center justify-center border-r-[3px] border-black text-[11px] font-black uppercase tracking-[0.24em] transition-all ${
         selected === value
-          ? "bg-zinc-800 border-burn opacity-100"
-          : "border-transparent hover:border-r-zinc-50 opacity-50 hover:bg-zinc-900"
+          ? "bg-[var(--accent-primary)] text-white opacity-100"
+          : "border-transparent bg-transparent text-zinc-400 opacity-80 hover:bg-zinc-900 hover:text-[var(--accent-secondary)]"
       }`}
     >
       {children}

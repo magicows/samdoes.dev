@@ -89,67 +89,58 @@ export const Blog = ({ post }: Props) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             onClick={() => setIsOpen(true)}
-            className="w-full flex items-center aspect-video bg-zinc-700 cursor-pointer relative rounded-lg overflow-hidden"
+            className="relative flex aspect-video w-full items-center overflow-hidden border-4 border-black bg-zinc-800 shadow-[8px_8px_0px_0px_#37D6C8] transition-all duration-200 hover:-translate-y-[2px] hover:translate-x-[2px]"
           >
             <img
               src={image}
               alt={`An image of the ${example.title} project.`}
               style={{
                 scale: hovered ? "1.05" : "1",
-                rotate: hovered ? "2deg" : "0deg",
-                filter: hovered ? "grayscale(1)" : "grayscale(0)",
+                filter: "grayscale(0)",
               }}
-              className="w-full transition-all rounded"
+              className="w-full h-full object-cover transition-all duration-300"
             />
           </div>
-          <div className="mt-6">
+          <div className="mt-6 border-l-4 border-[var(--accent-secondary)] pl-4">
             <Reveal width="w-full">
-              <div className="flex items-center gap-2 w-full">
-                <h4 className="font-bold text-lg shrink-0 max-w-[calc(100%_-_150px)]">
-                  {post.properties.Title.title[0].plain_text}
-                </h4>
-                <div className="w-full h-[1px] bg-zinc-600" />
-                <CalendarIcon dateString={post.properties.Date.date.start} />
-                {/* <Link href={example.code} target="_blank" rel="nofollow">
-                    <AiFillGithub className="text-xl text-zinc-300 hover:text-burnLight transition-colors" />
-                  </Link>
-
-                  <Link href={example.projectLink} target="_blank" rel="nofollow">
-                    <AiOutlineExport className="text-xl text-zinc-300 hover:text-burnLight transition-colors" />
-                  </Link> */}
-              </div>
+              <>
+                <div className="flex items-center gap-2 w-full">
+                  <h4 className="font-black text-xl text-white shrink-0 max-w-full leading-tight uppercase tracking-tight">
+                    {post.properties.Title.title[0].plain_text}
+                  </h4>
+                </div>
+                <div className="my-2 h-[4px] w-full bg-[var(--accent-primary)]" />
+              </>
             </Reveal>
             <Reveal width="w-full">
-              <div className={"flex flex-row justify-between items-center"}>
-                <div className="flex flex-wrap gap-4 text-sm text-burnLight my-2">
-                  {tags.join(" - ")}
-                </div>                
+              <div className="mb-4 mt-3 flex flex-wrap items-center gap-3">
+                <CalendarIcon dateString={post.properties.Date.date.start} />
+                <div className="flex min-w-0 flex-1 flex-wrap gap-2">
+                  {tags.map((tag: string) => (
+                    <span
+                      key={tag}
+                      className="border-2 border-black bg-[var(--accent-tertiary)] px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-black shadow-[2px_2px_0px_0px_#000]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </Reveal>
             <Reveal>
-              <p className="text-zinc-300 leading-relaxed">
-                {summary}{" "}
+              <p className="mt-2 border-l-2 border-[var(--accent-primary)] pl-3 font-medium leading-relaxed text-zinc-200">
+                {summary}
                 <span
-                  className="inline-block text-sm text-burn cursor-pointer"
+                  className="mt-3 block cursor-pointer text-sm font-black text-[var(--accent-secondary)] underline decoration-4 decoration-black underline-offset-4"
                   onClick={() => setIsOpen(true)}
                 >
-                  Learn more {">"}
+                  READ MORE {">"}
                 </span>
               </p>
             </Reveal>
           </div>
         </Link>
       </motion.div>
-      {/* <BlogModal
-        modalContent={example.modalContent}
-        projectLink={example.projectLink}
-        setIsOpen={setIsOpen}
-        isOpen={isOpen}
-        imgSrc={example.imgSrc}
-        title={post.properties.Title.title[0].plain_text}
-        code={example.code}
-        tech={tags}
-      /> */}
     </>
   );
 };

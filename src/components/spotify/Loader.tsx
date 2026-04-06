@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   AnimationProps,
-  DynamicAnimationOptions,
   motion,
   useAnimate,
 } from "framer-motion";
@@ -12,7 +11,7 @@ const BLOCK_SIZE = 32;
 const DURATION_IN_MS = 175;
 const DURATION_IN_SECS = DURATION_IN_MS * 0.001;
 
-const TRANSITION: DynamicAnimationOptions = {
+const TRANSITION = {
   ease: "easeInOut",
   duration: DURATION_IN_SECS,
 };
@@ -22,46 +21,50 @@ export const ShuffleLoader = () => {
     Array.from(Array(NUM_BLOCKS).keys()).map((n) => ({ id: n }))
   );
   const [scope, animate] = useAnimate();
+  const mountedRef = React.useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
     const intervalId = setInterval(() => {
       shuffle();
     }, DURATION_IN_MS * 4); // Control how often shuffle happens
 
     return () => {
+      mountedRef.current = false;
       clearInterval(intervalId); // Clean up on unmount
     };
   }, []);
 
   const shuffle = async () => {
+    if (!mountedRef.current) return;
     const [first, second] = pickTwoRandom();
 
-    const firstElement = document.querySelector(`[data-block-id="${first.id}"]`);
-    const secondElement = document.querySelector(`[data-block-id="${second.id}"]`);
+    const firstSelector = `[data-block-id="${first.id}"]`;
+    const secondSelector = `[data-block-id="${second.id}"]`;
 
-    if (firstElement && secondElement) {
-      // Animate the elements only if they exist
-      await animate(firstElement, { y: -BLOCK_SIZE }, TRANSITION);
-      await animate(secondElement, { y: BLOCK_SIZE }, TRANSITION);
+    // Animate the elements - using type assertion to work with framer-motion 11
+    await animate(firstSelector, { y: -BLOCK_SIZE } as any, TRANSITION as any);
+    await animate(secondSelector, { y: BLOCK_SIZE } as any, TRANSITION as any);
 
-      await delay(DURATION_IN_MS);
+    await delay(DURATION_IN_MS);
+    if (!mountedRef.current) return;
 
-      setBlocks((pv) => {
-        const copy = [...pv];
-        const indexForFirst = copy.indexOf(first);
-        const indexForSecond = copy.indexOf(second);
-        copy[indexForFirst] = second;
-        copy[indexForSecond] = first;
-        return copy;
-      });
+    setBlocks((pv) => {
+      const copy = [...pv];
+      const indexForFirst = copy.indexOf(first);
+      const indexForSecond = copy.indexOf(second);
+      copy[indexForFirst] = second;
+      copy[indexForSecond] = first;
+      return copy;
+    });
 
-      await delay(DURATION_IN_MS * 2);
+    await delay(DURATION_IN_MS * 2);
+    if (!mountedRef.current) return;
 
-      await animate(firstElement, { y: 0 }, TRANSITION);
-      await animate(secondElement, { y: 0 }, TRANSITION);
+    await animate(firstSelector, { y: 0 } as any, TRANSITION as any);
+    await animate(secondSelector, { y: 0 } as any, TRANSITION as any);
 
-      await delay(DURATION_IN_MS);
-    }
+    await delay(DURATION_IN_MS);
   };
 
   const pickTwoRandom = () => {
@@ -80,7 +83,10 @@ export const ShuffleLoader = () => {
   };
 
   return (
-    <div ref={scope} className="flex divide-x divide-neutral-950">
+    <div
+      ref={scope}
+      className="flex border-[3px] border-black bg-zinc-950 shadow-[6px_6px_0px_0px_#000]"
+    >
       {blocks.map((b) => {
         return (
           <motion.div
@@ -92,7 +98,7 @@ export const ShuffleLoader = () => {
               width: BLOCK_SIZE,
               height: BLOCK_SIZE,
             }}
-            className="bg-burn"
+            className="border-r-[3px] border-black bg-[var(--accent-primary)] last:border-r-0 odd:bg-[var(--accent-secondary)]"
           />
         );
       })}

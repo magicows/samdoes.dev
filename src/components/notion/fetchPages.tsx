@@ -9,8 +9,16 @@ export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
+export const sortPostsByPublishedDate = <T extends { properties?: { Date?: { date?: { start?: string } } } }>(posts: T[]): T[] => {
+  return posts.slice().sort((a, b) =>
+    String(b?.properties?.Date?.date?.start || "").localeCompare(
+      String(a?.properties?.Date?.date?.start || "")
+    )
+  );
+};
+
 export const fetchPages = async () => {
-  return await notion.databases.query({
+  const response = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
     filter: {
       property: "Status",
@@ -18,7 +26,12 @@ export const fetchPages = async () => {
         equals: "Live",
       },
     },
-  })
+  });
+
+  return {
+    ...response,
+    results: sortPostsByPublishedDate(response.results.filter((result) => result.object === "page") as PageObjectResponse[]),
+  };
 };
 
 export const fetchBySlug = async (slug: string) => {
