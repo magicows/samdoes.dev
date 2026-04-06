@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
+import { SplitFlapText } from "./SplitFlapText";
 
 const shapes = [
   {
@@ -9,9 +10,11 @@ const shapes = [
     baseX: 18,
     baseY: 24,
     fill: "var(--accent-secondary)",
-    text: "BUILD",
+    words: ["BUILD", "CRAFT", "FORGE", "WRITE", "SHIP"],
     textColor: "#0b0c0f",
     depth: 0.18,
+    animDelay: 300,
+    cycleInterval: 2600,
   },
   {
     id: "panel-b",
@@ -20,9 +23,11 @@ const shapes = [
     baseX: 274,
     baseY: 54,
     fill: "var(--accent-primary)",
-    text: "TINKER",
+    words: ["TINKER", "DESIGN", "SKETCH", "DEPLOY", "DEBUG"],
     textColor: "#ffffff",
     depth: 0.24,
+    animDelay: 550,
+    cycleInterval: 3100,
   },
   {
     id: "panel-c",
@@ -31,9 +36,11 @@ const shapes = [
     baseX: 162,
     baseY: 230,
     fill: "#f4f4f5",
-    text: "PLAY",
+    words: ["PLAY", "VIBE", "REST", "LOOP"],
     textColor: "#0b0c0f",
     depth: 0.14,
+    animDelay: 800,
+    cycleInterval: 3500,
   },
   {
     id: "bar-a",
@@ -42,9 +49,11 @@ const shapes = [
     baseX: 320,
     baseY: 198,
     fill: "var(--accent-tertiary)",
-    text: "",
+    words: [] as string[],
     textColor: "#0b0c0f",
     depth: 0.3,
+    animDelay: 0,
+    cycleInterval: 0,
   },
   {
     id: "bar-b",
@@ -53,9 +62,11 @@ const shapes = [
     baseX: 336,
     baseY: 278,
     fill: "#1f242b",
-    text: "",
+    words: [] as string[],
     textColor: "#ffffff",
     depth: 0.22,
+    animDelay: 0,
+    cycleInterval: 0,
   },
   {
     id: "dot-a",
@@ -64,9 +75,11 @@ const shapes = [
     baseX: 390,
     baseY: 28,
     fill: "var(--accent-secondary)",
-    text: "",
+    words: [] as string[],
     textColor: "#0b0c0f",
     depth: 0.32,
+    animDelay: 0,
+    cycleInterval: 0,
   },
 ];
 
@@ -132,12 +145,14 @@ export default function HeroCircuit() {
                     : { type: "spring", stiffness: 180, damping: 14 },
                 }}
               >
-                {shape.text ? (
-                  <div
-                    className="flex h-full w-full items-center justify-center text-[24px] font-black uppercase tracking-[0.16em]"
-                    style={{ color: shape.textColor }}
-                  >
-                    {shape.text}
+                {shape.words.length > 0 ? (
+                  <div className="flex h-full w-full items-center justify-center text-[22px] font-black uppercase tracking-[0.16em]">
+                    <SplitFlapText
+                      words={shape.words}
+                      textColor={shape.textColor}
+                      initialDelay={shape.animDelay}
+                      cycleInterval={shape.cycleInterval}
+                    />
                   </div>
                 ) : null}
               </motion.div>

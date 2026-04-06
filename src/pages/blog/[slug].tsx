@@ -285,7 +285,7 @@ export default function BlogPost({ content, html, pageDetails, prevPost, nextPos
               </div>
             </div>
 
-            <div className="section-panel-soft mt-10 p-6">
+            <div className="section-panel-soft mt-10 p-6 flex justify-center">
               <Reveal width="w-fit">
                 <Link href="/blog" className="no-underline">
                   <div className="mx-auto flex w-fit items-center justify-center gap-2 border-[3px] border-black bg-[var(--accent-tertiary)] px-5 py-3 text-lg font-black uppercase tracking-[0.16em] text-black shadow-[6px_6px_0px_0px_#000] transition-all hover:-translate-y-1 hover:translate-x-1 md:text-xl">
