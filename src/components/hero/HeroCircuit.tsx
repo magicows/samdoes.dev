@@ -120,76 +120,92 @@ export default function HeroCircuit() {
             const idleOffset = (index % 2 === 0 ? -1 : 1) * (8 + index * 1.5);
 
             return (
+              // Outer: pointer tracking only — spring re-targets smoothly on every move
               <motion.div
                 key={shape.id}
-                className="absolute border-[3px] border-black shadow-[8px_8px_0px_0px_#000]"
-                style={{
-                  width: shape.width,
-                  height: shape.height,
-                  left: shape.baseX,
-                  top: shape.baseY,
-                  background: shape.fill,
-                }}
-                animate={{
-                  x: offsetX,
-                  y: [offsetY, offsetY + idleOffset, offsetY],
-                  scale: pulseScale,
-                  rotate: pulse % 2 === 0 ? [0, index % 2 === 0 ? 1.2 : -1.2, 0] : (index % 2 === 0 ? 1.8 : -1.8),
-                }}
+                className="absolute"
+                style={{ left: shape.baseX, top: shape.baseY }}
+                animate={{ x: offsetX, y: offsetY }}
                 transition={{
                   x: { type: "spring", stiffness: 120, damping: 18 },
-                  y: { duration: 4.8 + index * 0.35, repeat: Infinity, ease: "easeInOut" },
-                  scale: { type: "spring", stiffness: 180, damping: 12 },
-                  rotate: pulse % 2 === 0
-                    ? { duration: 5.4 + index * 0.3, repeat: Infinity, ease: "easeInOut" }
-                    : { type: "spring", stiffness: 180, damping: 14 },
+                  y: { type: "spring", stiffness: 120, damping: 18 },
                 }}
               >
-                {shape.words.length > 0 ? (
-                  <div className="flex h-full w-full items-center justify-center text-[22px] font-black uppercase tracking-[0.16em]">
-                    <SplitFlapText
-                      words={shape.words}
-                      textColor={shape.textColor}
-                      initialDelay={shape.animDelay}
-                      cycleInterval={shape.cycleInterval}
-                    />
-                  </div>
-                ) : null}
+                {/* Inner: idle float + pulse — anchored to 0 so it never restarts on mouse move */}
+                <motion.div
+                  className="border-[3px] border-black shadow-[8px_8px_0px_0px_#000]"
+                  style={{ width: shape.width, height: shape.height, background: shape.fill }}
+                  animate={{
+                    y: [0, idleOffset, 0],
+                    scale: pulseScale,
+                    rotate: pulse % 2 === 0 ? [0, index % 2 === 0 ? 1.2 : -1.2, 0] : (index % 2 === 0 ? 1.8 : -1.8),
+                  }}
+                  transition={{
+                    y: { duration: 4.8 + index * 0.35, repeat: Infinity, ease: "easeInOut" },
+                    scale: { type: "spring", stiffness: 180, damping: 12 },
+                    rotate: pulse % 2 === 0
+                      ? { duration: 5.4 + index * 0.3, repeat: Infinity, ease: "easeInOut" }
+                      : { type: "spring", stiffness: 180, damping: 14 },
+                  }}
+                >
+                  {shape.words.length > 0 ? (
+                    <div className="flex h-full w-full items-center justify-center text-[22px] font-black uppercase tracking-[0.16em]">
+                      <SplitFlapText
+                        words={shape.words}
+                        textColor={shape.textColor}
+                        initialDelay={shape.animDelay}
+                        cycleInterval={shape.cycleInterval}
+                      />
+                    </div>
+                  ) : null}
+                </motion.div>
               </motion.div>
             );
           })}
 
+          {/* Circle — outer tracks pointer, inner floats + pulses */}
           <motion.div
-            className="absolute left-[132px] top-[116px] h-[120px] w-[120px] rounded-full border-[3px] border-black bg-zinc-950 shadow-[8px_8px_0px_0px_#000]"
-            animate={{
-              x: pointer.x * -10,
-              y: [pointer.y * -12, pointer.y * -12 - 10, pointer.y * -12],
-              scale: pulse % 2 === 0 ? 1 : 1.08,
-            }}
+            className="absolute left-[132px] top-[116px] h-[120px] w-[120px]"
+            animate={{ x: pointer.x * -10, y: pointer.y * -12 }}
             transition={{
               x: { type: "spring", stiffness: 110, damping: 18 },
-              y: { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
-              scale: { type: "spring", stiffness: 170, damping: 12 },
+              y: { type: "spring", stiffness: 110, damping: 18 },
             }}
           >
             <motion.div
-              className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-black bg-[var(--accent-primary)]"
-              animate={{ scale: pulse % 2 === 0 ? 1 : 1.22 }}
-              transition={{ type: "spring", stiffness: 220, damping: 12 }}
-            />
+              className="h-full w-full rounded-full border-[3px] border-black bg-zinc-950 shadow-[8px_8px_0px_0px_#000]"
+              animate={{
+                y: [0, -10, 0],
+                scale: pulse % 2 === 0 ? 1 : 1.08,
+              }}
+              transition={{
+                y: { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
+                scale: { type: "spring", stiffness: 170, damping: 12 },
+              }}
+            >
+              <motion.div
+                className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-black bg-[var(--accent-primary)]"
+                animate={{ scale: pulse % 2 === 0 ? 1 : 1.22 }}
+                transition={{ type: "spring", stiffness: 220, damping: 12 }}
+              />
+            </motion.div>
           </motion.div>
 
+          {/* Bar — outer tracks pointer, inner floats */}
           <motion.div
-            className="absolute left-[354px] top-[250px] h-[16px] w-[50px] border-[3px] border-black bg-zinc-100 shadow-[6px_6px_0px_0px_#000]"
-            animate={{
-              x: pointer.x * 10,
-              y: [pointer.y * 6, pointer.y * 6 + 8, pointer.y * 6],
-            }}
+            className="absolute left-[354px] top-[250px]"
+            animate={{ x: pointer.x * 10, y: pointer.y * 6 }}
             transition={{
               x: { type: "spring", stiffness: 140, damping: 18 },
-              y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+              y: { type: "spring", stiffness: 140, damping: 18 },
             }}
-          />
+          >
+            <motion.div
+              className="h-[16px] w-[50px] border-[3px] border-black bg-zinc-100 shadow-[6px_6px_0px_0px_#000]"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" } }}
+            />
+          </motion.div>
         </motion.div>
       </div>
     </div>
